@@ -21,58 +21,53 @@ const getAllCommanders = asyncHandler(async (req, res) => {
 // Add a new commander to the database
 // Route POST @ api/commanders
 const addNewCommander = asyncHandler(async (req, res) => {
-	try {
-		const { name, image, dateStart, dateEnd, isDeceased, postNum, charterId } =
-			req.body;
-
-		const commander = new Commander({
-			name: name || "Sample name",
-			image: image || "default image",
-			dateStart: dateStart || Date.now(),
-			dateEnd: dateEnd || Date.now(),
-			isDeceased: isDeceased || false,
-			postNum: postNum || 123,
-		});
-
-		if (charterId) {
-			const charter = await Charter.findById(charterId);
-
-			if (!charter) {
-				return res.status(404).json({ error: "Charter not found" });
-			}
-
-			commander.charters.push(charterId);
-		}
-
-		const newCommander = await commander.save();
-		res.status(201).json(newCommander);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
-	}
-});
-
-const getCommandersForCharter = asyncHandler(async (req, res) => {
     try {
-        const { charterId } = req.params;
+        const { name, image, dateStart, dateEnd, isDeceased, postNum, charters } = req.body;
 
-        console.log("Charter ID:", charterId);
+        const commander = new Commander({
+            name: name || "Sample name",
+            image: image || "default image",
+            dateStart: dateStart || Date.now(),
+            dateEnd: dateEnd || Date.now(),
+            isDeceased: isDeceased || false,
+            postNum: postNum || 123,
+            charters: charters.map(charterId => ({ charter: charterId })),
+        });
 
-        // const commanders = await Commander.find({ "charters.charter": charterId }).populate("charters.charter");
-		const commanders = await Commander.find({ "charters.charter": charterId });
+        // Validate charters if needed
 
-        if (!commanders || commanders.length === 0) {
-            console.log("No commanders found for the charter");
-            return res.status(404).json({ error: "No commanders found for the charter" });
-        }
-
-        console.log("Found Commanders:", commanders);
-
-        res.json({ commanders });
+        const newCommander = await commander.save();
+        res.status(201).json(newCommander);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
+});
+
+
+
+// Get commanders for charter
+// Route @ api/commanders/:charterId
+const getCommandersForCharter = asyncHandler(async (req, res) => {
+	try {
+		const { charterId } = req.params;
+
+		const commanders = await Commander.find({ "charters.charter": charterId })
+			.populate("charters.charter")
+			.sort({ createdAt: "desc" });
+
+		if (!commanders || commanders.length === 0) {
+			console.log("No commanders found for the charter");
+			return res
+				.status(404)
+				.json({ error: "No commanders found for the charter" });
+		}
+
+		res.json({ commanders });
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
 });
 
 // Get a commander to the database by their id
@@ -96,51 +91,42 @@ const getCommanderById = asyncHandler(async (req, res) => {
 // Update Commander by id
 // Route PUT @ api/commanders/:id
 const updateCommanderById = asyncHandler(async (req, res) => {
-	try {
-		const { name, image, dateStart, dateEnd, isDeceased, postNum, charterId } =
-			req.body;
-		if (
-			!name ||
-			!dateStart ||
-			!dateEnd ||
-			typeof isDeceased === "undefined" ||
-			!postNum
-		) {
-			return res
-				.status(400)
-				.json({ error: "Missing required fields in the request body" });
-		}
+    try {
+        const { name, image, dateStart, dateEnd, isDeceased, postNum, charters } = req.body;
+        if (
+            !name ||
+            !dateStart ||
+            !dateEnd ||
+            typeof isDeceased === "undefined" ||
+            !postNum
+        ) {
+            return res.status(400).json({ error: "Missing required fields in the request body" });
+        }
 
-		const commander = await Commander.findByIdAndUpdate(req.params.id);
+        const commander = await Commander.findByIdAndUpdate(req.params.id);
 
-		if (commander) {
-			commander.name = name;
-			commander.image = image;
-			commander.dateStart = dateStart;
-			commander.dateEnd = dateEnd;
-			commander.isDeceased = isDeceased;
-			commander.postNum = postNum;
+        if (commander) {
+            commander.name = name;
+            commander.image = image;
+            commander.dateStart = dateStart;
+            commander.dateEnd = dateEnd;
+            commander.isDeceased = isDeceased;
+            commander.postNum = postNum;
 
-			if (charterId) {
-				const charter = await Charter.findById(charterId);
+            commander.charters = charters.map(charterId => ({ charter: charterId }));
 
-				if (!charter) {
-					return res.status(404).json({ error: "Charter not found" });
-				}
-				commander.charters = [charterId];
-			}
-
-			const updatedCommander = await commander.save();
-			res.json(updatedCommander);
-		} else {
-			res.status(404).json({ message: "Commander not found" });
-			throw new Error("Commander not found");
-		}
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
-	}
+            const updatedCommander = await commander.save();
+            res.json(updatedCommander);
+        } else {
+            res.status(404).json({ message: "Commander not found" });
+            throw new Error("Commander not found");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
+
 
 // Delete Commander
 // // Route DELETE @ api/commanders/:id
@@ -162,5 +148,5 @@ module.exports = {
 	getCommanderById,
 	getCommandersForCharter,
 	updateCommanderById,
-	deleteCommander
+	deleteCommander,
 };
