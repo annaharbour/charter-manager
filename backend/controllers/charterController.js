@@ -1,14 +1,15 @@
 const Charter = require("../models/Charters");
 const asyncHandler = require('../middleware/asyncHandler')
 
-const getCommandersForCharter = asyncHandler(async (req, res) => {
+// Get charter by id
+// Route @ api/charters/:id
+const getCharterById = asyncHandler(async (req, res) => {
 	try {
 		const { charterId } = req.params;
 
 		console.log("Charter ID:", charterId);
 
-		// const charter = await Charter.findById(charterId).populate("commanders");
-		const charter = await Charter.findById(charterId);
+		 const charter = await Charter.findById(charterId);
 
 		if (!charter) {
 			console.log("Charter not found");
@@ -17,14 +18,14 @@ const getCommandersForCharter = asyncHandler(async (req, res) => {
 
 		console.log("Found Charter:", charter);
 
-		res.json({ commanders: charter.commanders });
+		res.json({ charter });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });
 
-
+// Route POST @ /api/charters
 const addNewCharter = asyncHandler(async (req, res) => {
 	const charter = new Charter({});
 
@@ -33,4 +34,4 @@ const addNewCharter = asyncHandler(async (req, res) => {
 	res.status(201).json(newCharter);
 });
 
-module.exports = {getCommandersForCharter, addNewCharter}
+module.exports = {getCharterById, addNewCharter}

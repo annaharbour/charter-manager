@@ -30,8 +30,10 @@ const CommanderSchema = new Schema(
 		},
 		charters: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Charter",
+				charter: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Charter",
+				},
 			},
 		],
 	},

@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const {
-	getCommandersForCharter,
+	getCharterById,
 	addNewCharter,
 } = require("../controllers/charterController.js");
 
-router.get("/:charterId", getCommandersForCharter);
+router.get("/:charterId", getCharterById);
 router.route("/").post(addNewCharter);
 
 

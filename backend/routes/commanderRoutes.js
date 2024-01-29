@@ -5,7 +5,8 @@ const {
 	getCommanderById,
     updateCommanderById,
     deleteCommander,
-    addNewCommander
+    addNewCommander,
+	getCommandersForCharter
 } = require("../controllers/commanderController.js");
 
 router.route("/")
@@ -17,6 +18,8 @@ router
 	.get(getCommanderById)
 	.put(updateCommanderById)
 	.delete(deleteCommander);
+
+router.route("/charter/:charterId").get(getCommandersForCharter)
 
 
 module.exports = router;

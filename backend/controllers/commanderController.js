@@ -1,4 +1,5 @@
 const Commander = require("../models/Commanders");
+const Charter = require("../models/Charters");
 const asyncHandler = require("../middleware/asyncHandler");
 
 // Get all commanders
@@ -21,7 +22,8 @@ const getAllCommanders = asyncHandler(async (req, res) => {
 // Route POST @ api/commanders
 const addNewCommander = asyncHandler(async (req, res) => {
 	try {
-		const { name, image, dateStart, dateEnd, isDeceased, postNum } = req.body;
+		const { name, image, dateStart, dateEnd, isDeceased, postNum, charterId } =
+			req.body;
 
 		const commander = new Commander({
 			name: name || "Sample name",
@@ -32,12 +34,45 @@ const addNewCommander = asyncHandler(async (req, res) => {
 			postNum: postNum || 123,
 		});
 
+		if (charterId) {
+			const charter = await Charter.findById(charterId);
+
+			if (!charter) {
+				return res.status(404).json({ error: "Charter not found" });
+			}
+
+			commander.charters.push(charterId);
+		}
+
 		const newCommander = await commander.save();
 		res.status(201).json(newCommander);
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
+});
+
+const getCommandersForCharter = asyncHandler(async (req, res) => {
+    try {
+        const { charterId } = req.params;
+
+        console.log("Charter ID:", charterId);
+
+        // const commanders = await Commander.find({ "charters.charter": charterId }).populate("charters.charter");
+		const commanders = await Commander.find({ "charters.charter": charterId });
+
+        if (!commanders || commanders.length === 0) {
+            console.log("No commanders found for the charter");
+            return res.status(404).json({ error: "No commanders found for the charter" });
+        }
+
+        console.log("Found Commanders:", commanders);
+
+        res.json({ commanders });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 // Get a commander to the database by their id
@@ -62,7 +97,8 @@ const getCommanderById = asyncHandler(async (req, res) => {
 // Route PUT @ api/commanders/:id
 const updateCommanderById = asyncHandler(async (req, res) => {
 	try {
-		const { name, image, dateStart, dateEnd, isDeceased, postNum } = req.body;
+		const { name, image, dateStart, dateEnd, isDeceased, postNum, charterId } =
+			req.body;
 		if (
 			!name ||
 			!dateStart ||
@@ -84,6 +120,15 @@ const updateCommanderById = asyncHandler(async (req, res) => {
 			commander.dateEnd = dateEnd;
 			commander.isDeceased = isDeceased;
 			commander.postNum = postNum;
+
+			if (charterId) {
+				const charter = await Charter.findById(charterId);
+
+				if (!charter) {
+					return res.status(404).json({ error: "Charter not found" });
+				}
+				commander.charters = [charterId];
+			}
 
 			const updatedCommander = await commander.save();
 			res.json(updatedCommander);
@@ -113,8 +158,9 @@ const deleteCommander = asyncHandler(async (req, res) => {
 
 module.exports = {
 	getAllCommanders,
-	getCommanderById,
-	updateCommanderById,
-	deleteCommander,
 	addNewCommander,
+	getCommanderById,
+	getCommandersForCharter,
+	updateCommanderById,
+	deleteCommander
 };
