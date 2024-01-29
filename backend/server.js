@@ -3,8 +3,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db.js");
-const commanderRoutes = require('./routes/commanderRoutes.js');
-const charterRoutes = require('./routes/charterRoutes.js')
+const commanderRoutes = require("./routes/commanderRoutes.js");
+const charterRoutes = require("./routes/charterRoutes.js");
 
 const port = process.env.PORT || 5000;
 
