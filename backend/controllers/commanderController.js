@@ -44,8 +44,6 @@ const addNewCommander = asyncHandler(async (req, res) => {
     }
 });
 
-
-
 // Get commanders for charter
 // Route @ api/commanders/:charterId
 const getCommandersForCharter = asyncHandler(async (req, res) => {
