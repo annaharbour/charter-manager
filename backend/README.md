@@ -40,3 +40,31 @@ npm start
 - Endpoint: /api/charters
   Method: POST
   Description: Create a new charter.
+
+- Endpoint: /api/auth/signup
+  Method: POST
+  Description: Creates a new user.
+
+- Endpoint: /api/auth/signin
+  Method: POST
+  Description: Signs in a user.
+
+- Endpoint: /api/auth/signout
+  Method: POST
+  Description: Signs out a user.
+
+- Endpoint: /api/auth
+  Method: GET
+  Description: Gets users.
+
+- Endpoint: /api/auth/:id
+  Method: GET
+  Description: Gets user by id.
+
+- Endpoint: /api/auth/:id
+  Method: PUT
+  Description: Updates user by id.
+
+- Endpoint: /api/auth/:id
+  Method: DELETE
+  Description: Deletes user by id.
