@@ -29,7 +29,7 @@ const getCharterById = asyncHandler(async (req, res) => {
 // Route GET @ /api/charters
 const getAllCharters = asyncHandler(async (req, res) => {
 	try {
-		const charters = await Charter.find();
+		const charters = await Charter.find().sort({dateIssued: -1});
 
 		if (!charters || charters.length === 0) {
 			console.log("No charters found");
@@ -48,11 +48,18 @@ const getAllCharters = asyncHandler(async (req, res) => {
 // New Charter
 // Route POST @ /api/charters
 const addNewCharter = asyncHandler(async (req, res) => {
-	const charter = new Charter({});
+	try {
+		const { dateIssued, charterImage } = req.body;
 
-	const newCharter = await charter.save();
+		const charter = new Charter({ dateIssued, charterImage });
 
-	res.status(201).json(newCharter);
+		const newCharter = await charter.save();
+
+		res.status(201).json(newCharter);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
 });
 
 module.exports = { getCharterById, addNewCharter, getAllCharters };

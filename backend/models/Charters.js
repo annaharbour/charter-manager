@@ -3,11 +3,15 @@ const Schema = mongoose.Schema;
 
 const CharterSchema = new Schema(
 	{
-		charterDate: {
-			type: Date
-		}
+		dateIssued: {
+			type: Date,
+			required: true,
+		},
+		charterImage: {
+			type: String,
+			required: true,
+		},
 	},
-
 	{ timestamps: true }
 );
 
