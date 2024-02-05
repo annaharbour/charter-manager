@@ -3,10 +3,10 @@ const router = express.Router();
 const {
 	getCharterById,
 	addNewCharter,
-	getAllCharters,
+	getAllCharters
 } = require("../controllers/charterController.js");
 
-router.get("/:charterId", getCharterById);
+router.route("/:charterId").get(getCharterById)
 router.route("/").get(getAllCharters).post(addNewCharter);
 
 module.exports = router;
