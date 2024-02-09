@@ -16,8 +16,6 @@ const getCharterById = asyncHandler(async (req, res) => {
 			return res.status(404).json({ error: "Charter not found" });
 		}
 
-		console.log("Found Charter:", charter);
-
 		res.json({ charter });
 	} catch (error) {
 		console.error(error);
@@ -35,8 +33,6 @@ const getAllCharters = asyncHandler(async (req, res) => {
 			console.log("No charters found");
 			return res.status(404).json({ error: "No charters found" });
 		}
-
-		console.log("Found Charters:", charters);
 
 		res.json({ charters });
 	} catch (error) {

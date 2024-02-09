@@ -1,8 +1,9 @@
 import React from 'react'
+import CommanderList from '../components/CommanderList';
 
 function Home() {
   return (
-    <div>Home</div>
+    <div><CommanderList/></div>
   )
 }
 

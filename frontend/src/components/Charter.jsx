@@ -1,8 +1,9 @@
 import React from 'react'
 
-function Charter() {
+function Charter({dateIssued}) {
+
   return (
-    <div>Charter</div>
+    <h3>{dateIssued}</h3>
   )
 }
 
