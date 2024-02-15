@@ -10,14 +10,18 @@ function Commander({ name, image, isDeceased, postNum, dateStart, dateEnd }) {
 	}
 
 	return (
-		<div
-			className="commander-card"
-			background-image={image}
-			alt={Commander.name}>
-			{isDeceased ? <FontAwesomeIcon icon={faStar} /> : ""}
-			<h6>{name}</h6>
-			<p>{postNum}</p>
-			{formatDate(dateStart)} - {formatDate(dateEnd)}
+		<div className="commander-container">
+			<div className="commander-img">
+				<img src={image} alt={name} />
+				{!isDeceased ? <FontAwesomeIcon className="star" icon={faStar} /> : ""}
+			</div>
+			<div className="commander-info">
+				<h6>{name}</h6>
+				<p>{postNum}</p>
+				<p>
+					{formatDate(dateStart)} - {formatDate(dateEnd)}
+				</p>
+			</div>
 		</div>
 	);
 }

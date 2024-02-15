@@ -53,20 +53,23 @@ function CommanderList() {
 			<h1>Charters and Commanders</h1>
 			{charters.map((charter) => (
 				<div key={charter._id}>
-					<Charter dateIssued={charter.dateIssued} />
-					<ul>
-						{commandersByCharterId[charter._id]?.map((commander) => (
-							<Commander
-								key={commander._id}
-								image={commander.image}
-								name={commander.name}
-								postNum={commander.postNum}
-								isDeceased={commander.isDeceased}
-								dateStart={commander.dateStart}
-								dateEnd={commander.dateEnd}
-							/>
-						))}
-					</ul>
+					<Charter
+						dateIssued={charter.dateIssued}
+						charterImage={charter.charterImage}/>
+						<div className="commanders">
+							{commandersByCharterId[charter._id]?.map((commander) => (
+								<Commander
+									key={commander._id}
+									image={commander.image}
+									name={commander.name}
+									postNum={commander.postNum}
+									isDeceased={commander.isDeceased}
+									dateStart={commander.dateStart}
+									dateEnd={commander.dateEnd}
+								/>
+							))}
+						</div>
+					
 				</div>
 			))}
 		</div>

@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400;500;700&display=swap");
+
+* {
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
+html {
+	margin: 0;
+	height: 100vh;
+	width: 100vw;
+	text-align: center;
+	font-family: var(--body);
+}
+
+:root {
+	/* Primary Colors */
+	--primary-red: #991a1e;
+	--primary-gold: #a79055;
+	--primary-metallic: #a79055;
+	/* Secondary Colors */
+	/* accents, depth */
+	--blue: #164c83;
+	--cool-gray: #767779;
+	/* collateral text color */
+	--black-c-100: #231f20;
+	--black-c-75: #626366;
+	--black-c-25: #c6c8ca;
+	--white: #ffffff;
+
+	/* primary font for body copy, on web and print brand materials */
+	--body: "Pt Serif", sans-serif;
+	/* regular italic bold */
+
+	/* heading and subtitles */
+	--message: "Roboto", sans-serif;
+	/* light regular medium bold */
+}
+
+.charter {
+	border: 1px solid var(--black-c-100);
+	background-color: pink;
+	width: 60%;
+	margin: auto;
+}
+
+img.charter {
+	object-fit: cover;
+}
+
+h3.charter-year {
+	font-family: var(--message);
+}
+
+.commanders {
+	width: 60%;
+	margin: auto;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.commander-container {
+	margin: 2rem auto;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--black-c-100);
+	box-shadow: 1px 1px .1px .1px var(--black-c-75);
+	border-radius: 5px;
+}
+
+.commander-img {
+	position: relative;
+	width: 25rem;
+	height: 25rem;
+	background-color: var(--primary-red);
+}
+
+.star {
+	position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--primary-gold); 
+}
+
+.commander-info {
+	height: 10rem;
+}
+
+@media (max-width: 1400px) {
+	.commanders {
+		width: 100%;
+	}
+
+	.commander-img {
+		width: 18rem;
+		height: 18rem;
+	}
+}
