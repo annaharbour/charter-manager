@@ -1,11 +1,14 @@
 import React from 'react'
+import CommanderList from '../components/CommanderList';
 
 function Home() {
   return (
-    <div>Home</div>
+    <>
+      <header><img className='vfw-logo' alt="vfw-logo" src='/post.logo-full.color-1160.jpg'/></header>
+      <div><CommanderList/></div>
+      
+    </>
   )
 }
 
 export default Home
-
-// Map through charters and commanders of that charter with pagination
