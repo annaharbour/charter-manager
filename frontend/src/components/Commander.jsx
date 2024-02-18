@@ -16,10 +16,12 @@ function Commander({ name, image, isDeceased, postNum, dateStart, dateEnd }) {
 				{!isDeceased ? <FontAwesomeIcon className="star" icon={faStar} /> : ""}
 			</div>
 			<div className="commander-info">
-				<h6>{name}</h6>
-				<p>{postNum}</p>
+				<h4>{name}</h4>
+				<p>Post #{postNum}</p>
 				<p>
-					{formatDate(dateStart)} - {formatDate(dateEnd)}
+					<i>
+						{formatDate(dateStart)} - {formatDate(dateEnd)}
+					</i>
 				</p>
 			</div>
 		</div>

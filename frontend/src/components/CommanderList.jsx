@@ -49,8 +49,8 @@ function CommanderList() {
 	}, [charters]);
 
 	return (
-		<div>
-			<h1>Charters and Commanders</h1>
+		<div className="commander-list">
+			<h1>Commanders by Charter</h1>
 			{charters.map((charter) => (
 				<div key={charter._id}>
 					<Charter

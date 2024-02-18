@@ -37,11 +37,28 @@ html {
 	/* light regular medium bold */
 }
 
-.charter {
-	border: 1px solid var(--black-c-100);
-	background-color: pink;
-	width: 60%;
+.vfw-logo {
+	width: 20%;
 	margin: auto;
+}
+
+.commander-list h1 {
+	color: var(--primary-metallic);
+	font-size: 2.5rem;
+	background-color: var(--black-c-25); 
+	border: 1px solid var(--black-c-75);
+	border-radius: 5px;
+	padding: 2rem;
+	margin: auto;
+	width: 60%;
+	text-shadow: 0 0 3px var(--white), 0 0 5px var(--white)
+	
+}
+
+.charter {
+	width: 50%; 
+	margin: auto;
+	border-bottom: .25rem dashed var(--blue)
 }
 
 img.charter {
@@ -49,7 +66,9 @@ img.charter {
 }
 
 h3.charter-year {
-	font-family: var(--message);
+	font-family: var(--menssage);
+	font-size: 2rem;
+	color: var(--primary-gold);
 }
 
 .commanders {
@@ -76,6 +95,7 @@ h3.charter-year {
 	background-color: var(--primary-red);
 }
 
+
 .star {
 	position: absolute;
     top: 1rem;
@@ -95,5 +115,14 @@ h3.charter-year {
 	.commander-img {
 		width: 18rem;
 		height: 18rem;
+	}
+
+	.charter {
+		width: 80%;
+	}
+
+	.commander-list h1 {
+		width: 100%;
+		font-size: 2rem;
 	}
 }

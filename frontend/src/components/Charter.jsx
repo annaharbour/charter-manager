@@ -8,8 +8,8 @@ function Charter({ dateIssued, charterImage }) {
 
 	return (
 		<div className="charter">
-			<img src={charterImage} alt={`charter ${dateIssued}`}/>
-			<h3 className="charter-year">{formatYear(dateIssued)}</h3>
+			{/* <img src={charterImage} alt={`charter ${dateIssued}`}/> */}
+			<h3 className="charter-year">{formatYear(dateIssued)} Charter</h3>
 		</div>
 	);
 }
