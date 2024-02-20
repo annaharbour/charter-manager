@@ -4,13 +4,15 @@ import { faBars, faX, faUser, faCaretUp, faCaretDown } from "@fortawesome/free-s
 
 
 function Nav() {
+  
   return (
+    // If user is admin, display links below, otherwise nothing
     <div>
-      <FontAwesomeIcon className='nav-icon' icon={faBars} />
-      <FontAwesomeIcon className='nav-icon' icon={faX}/>
-      <FontAwesomeIcon className='nav-icon' icon={faUser}/>
-      <FontAwesomeIcon className='nav-icon' icon={faCaretUp}/>
-      <FontAwesomeIcon className='nav-icon' icon={faCaretDown}/>
+      <FontAwesomeIcon className='nav-icon bars' icon={faBars} />
+      <FontAwesomeIcon className='nav-icon x' icon={faX}/>
+      <FontAwesomeIcon className='nav-icon user' icon={faUser}/>
+      <FontAwesomeIcon className='nav-icon caret-up' icon={faCaretUp}/>
+      <FontAwesomeIcon className='nav-icon caret-down' icon={faCaretDown}/>
     </div>
   )
 }

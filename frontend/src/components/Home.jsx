@@ -50,6 +50,13 @@ function CommanderList() {
 
 	return (
 		<div className="commander-list">
+			<header>
+				<img
+					className="vfw-logo"
+					alt="vfw-logo"
+					src="/post.logo-full.color-1160.jpg"
+				/>
+			</header>
 			<h1>Commanders by Charter</h1>
 			{charters.map((charter) => (
 				<div key={charter._id}>

@@ -1,1 +1,0 @@
-// Array of charters with subarrays of commanders with dummy properties for UI purposes
