@@ -109,7 +109,8 @@ h3.charter-year {
 .signin {
 	width: 50%;
 	margin: 5rem auto;
-	border: 1px solid var(--cool-gray);
+	border: 5px solid var(--primary-metallic);
+	box-shadow: 0 0 .5rem 0 var(--black-c-75);
 	border-radius: 5px;
 	padding: 2rem;
 	font-size: 1.2rem;
@@ -127,9 +128,8 @@ input {
 }
 
 input:focus {
-	box-shadow: none;
-	border: 1px solid var(--black-c-75);
-	outline: 1px solid var(--black-c-75);
+	box-shadow: 0 0 .5rem 0 var(--black-c-75);
+	outline: none;
 }
 
 label {
