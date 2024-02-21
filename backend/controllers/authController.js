@@ -7,7 +7,7 @@ const asyncHandler = require("../middleware/asyncHandler");
 const signup = asyncHandler(async (req, res) => {
 	const { userName, email, password } = req.body;
 
-	if ((!userName, !email, !password)) {
+	if ((!userName || !email || !password)) {
 		return res.status(400).json({ msg: "Please enter all fields" });
 	}
 
@@ -16,6 +16,7 @@ const signup = asyncHandler(async (req, res) => {
 		return res.status(400).json({ msg: "Invalid email format" });
 	}
 
+	
 	try {
 		const user = await User.findOne({ email });
 
@@ -69,7 +70,7 @@ const signin = asyncHandler(async (req, res) => {
 			},
 			process.env.JWTSecret,
 			{
-				expiresIn: "2h",
+				expiresIn: "6h",
 			}
 		);
 

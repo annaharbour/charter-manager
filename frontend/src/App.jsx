@@ -6,21 +6,28 @@ import Home from "./components/Home";
 import Nav from "./components/Nav";
 import Admin from "./auth/Admin";
 import SignIn from "./auth/SignIn";
-import SignUp from "./auth/SignUp";
+import CharterList from './auth/CharterList'
+import CommanderList from './auth/CommanderList'
 
 function App() {
 	return (
 		<>
 			<Nav />
+			<header>
+				<img
+					className="vfw-logo"
+					alt="vfw-logo"
+					src="/post.logo-full.color-1160.jpg"
+				/>
+			</header>
 			<Routes>
 				<Route path="/" element={<Home />} />
-        <Route path="" element={<PrivateRoute />}>
-        <Route path="/admin" element={<Admin />} />
+				<Route path="/signin" element={<SignIn />} />
+				<Route path="" element={<PrivateRoute />}>
+					<Route path="/admin" element={<Admin />} />
+					<Route path="/commanders" element={<CommanderList />} />
+					<Route path="/charters" element={<CharterList />} />
 				</Route>
-        
-      
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
 			</Routes>
 		</>
 	);

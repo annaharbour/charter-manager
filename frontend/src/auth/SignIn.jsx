@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBackward } from "@fortawesome/free-solid-svg-icons";
 
 function SignIn() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -10,24 +13,20 @@ function SignIn() {
 	const handleSignIn = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await fetch("http://localhost:5000/api/auth/signin", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
+			const response = await axios.post(
+				"http://localhost:5000/api/auth/signin",
+				{
 					email: email,
 					password: password,
-				}),
-			});
-			const data = await response.json();
-			if (response.ok) {
+				}
+			);
+			const data = response.data;
+			if (response.status === 200) {
 				setIsLoggedIn(true);
 				localStorage.setItem("token", data.accessToken);
-				console.log("Successfully logged in");
 			} else {
 				setError(data.msg);
-				console.log('Login failed', data.msg)
+				console.log("Login failed", data.msg);
 			}
 		} catch (error) {
 			console.error("Error logging in:", error);
@@ -36,26 +35,20 @@ function SignIn() {
 	};
 
 	return (
-		<>
-			{isLoggedIn ? (
-				<div className="admin-links">
-					<Link to="/Home">Home</Link>
-					<Link to="/CharterList">CharterList</Link>
-					<Link to="/CommanderList">CommanderList</Link>
-					<Link to="/UserList">UserList</Link>
-				</div>
-			) : (
-				<div>
+		<div>
+			{!isLoggedIn ? (
+				<div className="signin">
 					<p>Please sign in to continue.</p>
 					<form onSubmit={handleSignIn}>
-						<label htmlFor="username">Username:</label>
+						<label htmlFor="email">Email:</label>
 						<input
 							type="email"
 							name="email"
 							id="email"
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
-							required></input>
+							required
+						/>
 						<label htmlFor="password">Password:</label>
 						<input
 							type="password"
@@ -65,15 +58,24 @@ function SignIn() {
 							onChange={(e) => setPassword(e.target.value)}
 							required
 						/>
-						<button className="submit-button" type="submit">
-							Sign In
-						</button>
+						<div>
+							<button className="submit-button" type="submit">
+								Sign In
+							</button>
+						</div>
+						<p>
+							<Link to="/">
+								<FontAwesomeIcon className="nav-icon back" icon={faBackward} />
+							</Link>
+							Not admin? Return <Link to="/">home</Link>
+						</p>
 					</form>
-
 					{error && <p>{error}</p>}
 				</div>
+			) : (
+				<Navigate to="/admin" />
 			)}
-		</>
+		</div>
 	);
 }
 

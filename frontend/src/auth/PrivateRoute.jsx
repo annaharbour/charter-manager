@@ -1,44 +1,44 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import Admin from "./Admin";
 
-const PrivateRoute = ({ Component }) => {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-	const [loading, setLoading] = useState(true);
+const PrivateRoute = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		const checkAuthentication = async () => {
-			try {
-				const token = localStorage.getItem("token");
-				if (!token) {
-					throw new Error("No token found");
-				}
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("No token found");
+        }
+        const response = await axios.get("http://localhost:5000/api/auth", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.status === 200 && response.data.length > 0) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-				const response = await axios.get("http://localhost:5000/api/auth", {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
-				if (response.data.isAuthenticated) {
-					setIsAuthenticated(true);
-				} else {
-					setIsAuthenticated(false);
-				}
-			} catch (error) {
-				console.error("Error checking authentication:", error);
-				setIsAuthenticated(false);
-			} finally {
-				setLoading(false);
-			}
-		};
+    checkAuthentication();
+  }, []);
 
-		checkAuthentication();
-	}, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-	if (loading) {
-		return <div>Loading...</div>;
-	}
-
-	return isAuthenticated ? <Component /> : <Navigate to="/admin" />;
+  return isAuthenticated ? <Admin /> : <Navigate to="/signin" />;
 };
+
 export default PrivateRoute;
