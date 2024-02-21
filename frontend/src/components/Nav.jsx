@@ -6,7 +6,6 @@ import { faBars, faX, faUser, faCaretUp, faCaretDown } from "@fortawesome/free-s
 function Nav() {
   
   return (
-    // If user is admin, display links below, otherwise nothing
     <div>
       <FontAwesomeIcon className='nav-icon bars' icon={faBars} />
       <FontAwesomeIcon className='nav-icon x' icon={faX}/>

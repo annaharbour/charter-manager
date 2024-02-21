@@ -3,8 +3,8 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import Admin from "./Admin";
 
-const PrivateRoute = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const PrivateRoute = ({updateAuthentication}) => {
+   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,11 +21,14 @@ const PrivateRoute = () => {
         });
         if (response.status === 200 && response.data.length > 0) {
           setIsAuthenticated(true);
+          updateAuthentication(true)
         } else {
           setIsAuthenticated(false);
+          updateAuthentication(false)
         }
       } catch (error) {
         setIsAuthenticated(false);
+        updateAuthentication(false)
       } finally {
         setLoading(false);
       }
@@ -42,3 +45,4 @@ const PrivateRoute = () => {
 };
 
 export default PrivateRoute;
+

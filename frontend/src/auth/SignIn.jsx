@@ -65,7 +65,7 @@ function SignIn() {
 						</div>
 						<p>
 							<Link to="/">
-								<FontAwesomeIcon className="nav-icon back" icon={faBackward} />
+								<FontAwesomeIcon className="back-icon" icon={faBackward} />
 							</Link>
 							Not admin? Return <Link to="/">home</Link>
 						</p>

@@ -151,6 +151,7 @@ button {
 
 button:hover {
 	opacity: 0.9;
+	cursor: pointer;
 }
 
 button:active {
@@ -164,7 +165,9 @@ button:active {
 	color: white;
 }
 
-.nav-icon.back {
+
+
+.back-icon {
 	margin: 0 0.5rem;
 	color: var(--primary-metallic);
 }

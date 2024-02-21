@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Routes, Route } from "react-router";
 import PrivateRoute from "./auth/PrivateRoute";
 import "./App.css";
@@ -10,9 +10,15 @@ import CharterList from './auth/CharterList'
 import CommanderList from './auth/CommanderList'
 
 function App() {
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+	const updateAuthentication = (isAuthenticated) => {
+		setIsAuthenticated(isAuthenticated);
+	  };
+	  
 	return (
 		<>
-			<Nav />
+		{isAuthenticated && <Nav/>}
 			<header>
 				<img
 					className="vfw-logo"
@@ -23,7 +29,7 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/signin" element={<SignIn />} />
-				<Route path="" element={<PrivateRoute />}>
+				<Route path="" element={<PrivateRoute updateAuthentication={updateAuthentication} />}>
 					<Route path="/admin" element={<Admin />} />
 					<Route path="/commanders" element={<CommanderList />} />
 					<Route path="/charters" element={<CharterList />} />
