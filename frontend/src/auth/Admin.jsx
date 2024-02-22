@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faBackward,
+	faCaretDown,
+	faCaretUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 function Admin() {
 	const [error, setError] = useState("");
@@ -12,8 +19,7 @@ function Admin() {
 				},
 			});
 			localStorage.removeItem("token");
-			window.location.reload(); 
-
+			window.location.reload();
 		} catch (error) {
 			console.error("Error logging out:", error);
 			setError("An error occurred while logging out");
@@ -21,13 +27,30 @@ function Admin() {
 	};
 
 	return (
-		<>
-			{error ? error : (
-       <p>Success</p>
-      )}
-				<button onClick={handleLogout}>Logout</button>
-        
-		</>
+		<div className="admin">
+			{error ? (
+				error
+			) : (
+				<div className="admin-actions">
+					<div className="admin-action-dropdown">
+						Manage Commanders
+						<FontAwesomeIcon className="back-icon" icon={faCaretDown} />
+					</div>
+
+					<div className="admin-action-dropdown">
+						Manage Charters
+						<FontAwesomeIcon className="back-icon" icon={faCaretDown} />
+					</div>
+				</div>
+			)}
+			<button onClick={handleLogout}>Logout</button>
+			<p>
+				<Link to="/">
+					<FontAwesomeIcon className="back-icon" icon={faBackward} />
+				</Link>{" "}
+				Navigate to <Link to="/">home</Link>
+			</p>
+		</div>
 	);
 }
 

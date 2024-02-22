@@ -110,13 +110,33 @@ h3.charter-year {
 	width: 50%;
 	margin: 5rem auto;
 	border: 5px solid var(--primary-metallic);
-	box-shadow: 0 0 .5rem 0 var(--black-c-75);
+	box-shadow: 0 0 0.5rem 0 var(--black-c-75);
 	border-radius: 5px;
 	padding: 2rem;
 	font-size: 1.2rem;
 	text-align: center;
 }
 
+.admin {
+	width: 100%;
+	margin: auto;
+	justify-content: center;
+	align-content: center;
+}
+
+.admin-actions {
+	text-align: center;
+	display: block;
+	margin: 1rem;
+	color: var(--blue);
+	font-size: 2rem;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.admin-action-dropdown {
+	margin: 2rem;
+}
 
 input {
 	width: 40%;
@@ -128,7 +148,7 @@ input {
 }
 
 input:focus {
-	box-shadow: 0 0 .5rem 0 var(--black-c-75);
+	box-shadow: 0 0 0.5rem 0 var(--black-c-75);
 	outline: none;
 }
 
@@ -164,8 +184,6 @@ button:active {
 	box-shadow: 0 0 0 0 var(--black-c-75);
 	color: white;
 }
-
-
 
 .back-icon {
 	margin: 0 0.5rem;
@@ -208,13 +226,11 @@ button:active {
 	}
 }
 
-
-
- @media (min-height: 1000px) and (orientation: portrait) {
+@media (min-height: 1000px) and (orientation: portrait) {
 	input {
 		width: 50%;
 	}
-} 
+}
 
 @media (max-width: 1400px) and (orientation: landscape) {
 	input {
