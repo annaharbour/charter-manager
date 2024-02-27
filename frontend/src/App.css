@@ -128,14 +128,15 @@ h3.charter-year {
 	text-align: center;
 	display: block;
 	margin: 1rem;
-	color: var(--blue);
-	font-size: 2rem;
-	font-weight: bold;
-	text-decoration: underline;
 }
 
 .admin-action-dropdown {
+	cursor: pointer;
 	margin: 2rem;
+	font-size: 2rem;
+	font-weight: bold;
+	text-decoration: underline;
+	color: var(--blue);
 }
 
 input {
@@ -190,6 +191,34 @@ button:active {
 	color: var(--primary-metallic);
 }
 
+/* TABLES */
+
+.commanders-admin {
+	display: flex;
+	justify-content: center;
+	margin: auto;
+}
+
+.rwd-table {
+	width: 80%;
+	margin: auto;
+	border: 0.2rem solid var(--primary-gold);
+	background: var(--blue);
+	color: var(--black-c-25);
+	border-radius: 5px;
+	overflow: hidden;
+
+	th,
+	td {
+		margin: 1rem;
+		padding: 1rem;
+		border-bottom: 0.1rem solid var(--black-c-25);
+	}
+	th {
+		color: var(--primary-gold);
+	}
+}
+
 @media (max-width: 1400px) {
 	.vfw-logo {
 		width: 50%;
@@ -207,6 +236,7 @@ button:active {
 	button {
 		margin: 0.5rem auto;
 	}
+
 	.commanders {
 		width: 100%;
 	}
@@ -223,6 +253,40 @@ button:active {
 	.commander-list h1 {
 		width: 100%;
 		font-size: 2rem;
+	}
+
+	/* Remove top heading */
+
+	td {
+		display: flex;
+		justify-content: left;
+		align-items: top;
+	}
+	th {
+		display: none;
+	}
+
+	/* Add a heading with the data from all th before each td */
+	.rwd-table td:before {
+		color: var(--primary-gold);
+		content: attr(data-th) "";
+		font-weight: bold;
+		display: inline-block;
+		.rwd-table td {
+			display: table-cell;
+		}
+
+		.rwd-table td:first-child {
+			padding-top: 0;
+		}
+
+		.rwd-table td:last-child {
+			padding-bottom: 0;
+		}
+
+		.rwd-table td:before {
+			display: none;
+		}
 	}
 }
 

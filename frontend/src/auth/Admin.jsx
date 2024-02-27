@@ -6,9 +6,12 @@ import {
 	faCaretDown,
 	faCaretUp,
 } from "@fortawesome/free-solid-svg-icons";
+import CommanderList from "./CommanderList";
 
 function Admin() {
 	const [error, setError] = useState("");
+	const [toggleCommanders, setToggleCommanders] = useState(false);
+	const [toggleCharters, setToggleCharters] = useState(false);
 
 	const handleLogout = async () => {
 		try {
@@ -26,21 +29,50 @@ function Admin() {
 		}
 	};
 
+	function onToggleCommandersClick() {
+		setToggleCommanders(!toggleCommanders);
+	}
+
+	function onToggleChartersClick() {
+		setToggleCharters(!toggleCharters);
+	}
+
 	return (
 		<div className="admin">
 			{error ? (
 				error
 			) : (
 				<div className="admin-actions">
-					<div className="admin-action-dropdown">
+					<div
+						className="admin-action-dropdown"
+						onClick={onToggleCommandersClick}>
 						Manage Commanders
-						<FontAwesomeIcon className="back-icon" icon={faCaretDown} />
+						<FontAwesomeIcon
+							className="back-icon"
+							icon={toggleCommanders ? faCaretUp : faCaretDown}
+						/>
 					</div>
-
-					<div className="admin-action-dropdown">
+					{toggleCommanders ? (
+						<div className="commanders-admin">
+							<CommanderList />
+						</div>
+					) : (
+						""
+					)}
+					<div
+						className="admin-action-dropdown"
+						onClick={onToggleChartersClick}>
 						Manage Charters
-						<FontAwesomeIcon className="back-icon" icon={faCaretDown} />
+						<FontAwesomeIcon
+							className="back-icon"
+							icon={toggleCharters ? faCaretUp : faCaretDown}
+						/>
 					</div>
+					{toggleCharters ? (
+						<div className="commanders-charters">Charters</div>
+					) : (
+						""
+					)}
 				</div>
 			)}
 			<button onClick={handleLogout}>Logout</button>
@@ -55,7 +87,3 @@ function Admin() {
 }
 
 export default Admin;
-
-// Login -> render form --> render SignIn form --> redirect to home
-// Do you not have an account? --> Register -> render SignUp form --> redirect to home
-// Home will include admin navigation
