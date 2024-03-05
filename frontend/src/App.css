@@ -205,6 +205,10 @@ button:active {
 	color: var(--black-c-25);
 	border-radius: 5px;
 	list-style: none;
+	.line {
+		width: 100%;
+		border-bottom: 1px solid var(--black-c-25);
+	}
 	tr {
 		position: relative;
 	}
@@ -288,17 +292,17 @@ button:active {
 			.rwd-table td:first-child {
 				padding-top: 0;
 			}
-	
+
 			.rwd-table td:last-child {
 				padding-bottom: 0;
 			}
-	
+
 			.rwd-table td:before {
 				display: none;
 			}
 		}
 		td {
-			padding: 0rem; 
+			padding: 0rem;
 			display: flex;
 			justify-content: left;
 			align-items: top;
@@ -312,7 +316,6 @@ button:active {
 	}
 
 	/* Add a heading with the data from all th before each td */
-
 }
 
 @media (min-height: 1000px) and (orientation: portrait) {
