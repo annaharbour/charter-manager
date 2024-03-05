@@ -127,7 +127,6 @@ h3.charter-year {
 .admin-actions {
 	text-align: center;
 	display: block;
-	margin: 1rem;
 }
 
 .admin-action-dropdown {
@@ -200,22 +199,34 @@ button:active {
 }
 
 .rwd-table {
-	width: 80%;
 	margin: auto;
 	border: 0.2rem solid var(--primary-gold);
 	background: var(--blue);
 	color: var(--black-c-25);
 	border-radius: 5px;
-	overflow: hidden;
-
+	list-style: none;
+	tr {
+		position: relative;
+	}
 	th,
 	td {
 		margin: 1rem;
 		padding: 1rem;
-		border-bottom: 0.1rem solid var(--black-c-25);
 	}
 	th {
 		color: var(--primary-gold);
+	}
+	.icons {
+		display: flex;
+		width: 4rem;
+		font-size: 1.2rem;
+	}
+	.icons:hover {
+		cursor: pointer;
+	}
+	.icons .delete {
+		color: var(--primary-red);
+		margin: 0rem 1rem;
 	}
 }
 
@@ -254,40 +265,54 @@ button:active {
 		width: 100%;
 		font-size: 2rem;
 	}
+}
 
-	/* Remove top heading */
-
-	td {
+@media (max-width: 600px) {
+	.rwd-table {
+		width: 100%;
 		display: flex;
-		justify-content: left;
-		align-items: top;
-	}
-	th {
-		display: none;
+		flex-wrap: wrap;
+		justify-content: center;
+		th {
+			display: none;
+		}
+		td:before {
+			color: var(--primary-gold);
+			content: attr(data-th) "";
+			margin-right: 0.5rem;
+			font-weight: bold;
+			display: inline-block;
+			word-wrap: break-word;
+			border-bottom: 1px solid var(--black-c-25);
+
+			.rwd-table td:first-child {
+				padding-top: 0;
+			}
+	
+			.rwd-table td:last-child {
+				padding-bottom: 0;
+			}
+	
+			.rwd-table td:before {
+				display: none;
+			}
+		}
+		td {
+			padding: 0rem; 
+			display: flex;
+			justify-content: left;
+			align-items: top;
+		}
+		.icons {
+			position: absolute;
+			z-index: 2rem;
+			top: 1rem;
+			right: 0;
+		}
 	}
 
 	/* Add a heading with the data from all th before each td */
-	.rwd-table td:before {
-		color: var(--primary-gold);
-		content: attr(data-th) "";
-		font-weight: bold;
-		display: inline-block;
-		.rwd-table td {
-			display: table-cell;
-		}
 
-		.rwd-table td:first-child {
-			padding-top: 0;
-		}
-
-		.rwd-table td:last-child {
-			padding-bottom: 0;
-		}
-
-		.rwd-table td:before {
-			display: none;
-		}
-	}
 }
 
 @media (min-height: 1000px) and (orientation: portrait) {

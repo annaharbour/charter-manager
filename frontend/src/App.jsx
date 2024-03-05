@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import { Routes, Route } from "react-router";
-import PrivateRoute from "./auth/PrivateRoute";
+import PrivateRoute from "./admin/PrivateRoute";
 import "./App.css";
 import Home from "./components/Home";
 import Nav from "./components/Nav";
-import Admin from "./auth/Admin";
-import SignIn from "./auth/SignIn";
-import CharterList from './auth/CharterList'
-import CommanderList from './auth/CommanderList'
+import Admin from "./admin/Admin";
+import SignIn from "./admin/SignIn";
+import CharterList from './admin/CharterList'
+import CommanderList from './admin/CommanderList'
 
 function App() {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
