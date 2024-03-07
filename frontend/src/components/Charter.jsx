@@ -1,10 +1,8 @@
 import React from "react";
+import {formatYear} from '../common/formatDate'
 
 function Charter({ dateIssued, charterImage }) {
-	function formatYear(dateString) {
-		const date = new Date(dateString);
-		return date.getFullYear();
-	}
+	
 
 	return (
 		<div className="charter">
