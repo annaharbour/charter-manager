@@ -28,14 +28,7 @@ const CommanderSchema = new Schema(
 			required: true,
 			default: false,
 		},
-		charters: [
-			{
-				charter: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "Charter",
-				},
-			},
-		],
+		charters: [{ type: Schema.Types.ObjectId, ref: 'Charter' }]
 	},
 	{ timestamps: true }
 );

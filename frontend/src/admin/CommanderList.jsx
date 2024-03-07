@@ -20,13 +20,18 @@ function CommanderList() {
 		fetchCommanders();
 	}, []);
 
+	function onUpdateCommander(updatedCommander){
+		// update database with new commander using axios
+		console.log(updatedCommander)
+	}
+
 	return (
 		<div>
 			<table className="rwd-table">
 				<thead>
 					<tr>
 						<th>Commander Name</th>
-						<th>Post Number</th>
+						<th>Post #</th>
 						<th>Service</th>
 						<th>Charters</th>
 						<th></th>
@@ -34,7 +39,7 @@ function CommanderList() {
 				</thead>
 				<tbody>
 					{commanders.map((commander) => (
-						<CommanderItem key={commander._id} commander={commander} />
+						<CommanderItem key={commander._id} commander={commander} onUpdateCommander={onUpdateCommander}/>
 					))}
 					<tr>
 						<td>

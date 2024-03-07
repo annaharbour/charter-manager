@@ -1,12 +1,12 @@
 const Commander = require("../models/Commanders");
 const Charter = require("../models/Charters");
 const asyncHandler = require("../middleware/asyncHandler");
-
+const mongoose = require("mongoose");
 // Get all commanders
 // Route GET @ api/commanders
 const getAllCommanders = asyncHandler(async (req, res) => {
 	try {
-		const commanders = await Commander.find();
+		const commanders = await Commander.find().populate('charters');
 		if (commanders && commanders.length > 0) {
 			res.json({ commanders });
 		} else {
@@ -18,32 +18,29 @@ const getAllCommanders = asyncHandler(async (req, res) => {
 	}
 });
 
-// Add a new commander to the database
-// Route POST @ api/commanders
 const addNewCommander = asyncHandler(async (req, res) => {
 	try {
-		const { name, image, dateStart, dateEnd, isDeceased, postNum, charters } =
-			req.body;
-
-		const commander = new Commander({
-			name: name || "Sample name",
-			image: image || "default image",
-			dateStart: dateStart || Date.now(),
-			dateEnd: dateEnd || Date.now(),
-			isDeceased: isDeceased || false,
-			postNum: postNum || 123,
-			charters: charters.map((charterId) => ({ charter: charterId })),
-		});
-
-		// Validate charters if needed
-
-		const newCommander = await commander.save();
-		res.status(201).json(newCommander);
+	  const { name, image, dateStart, dateEnd, isDeceased, postNum, charters } =
+		req.body;
+  
+	  const commander = new Commander({
+		name: name || "Sample name",
+		image: image || "default image",
+		dateStart: dateStart || Date.now(),
+		dateEnd: dateEnd || Date.now(),
+		isDeceased: isDeceased || false,
+		postNum: postNum || 123,
+		charters: charters,
+	  });
+    
+	  const newCommander = await commander.save();
+	  await Commander.populate(newCommander, { path: "charters" })
+	  res.status(201).json(newCommander);
 	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
+	  console.error(error);
+	  res.status(500).json({ error: "Internal Server Error" });
 	}
-});
+  });
 
 // Get commanders for charter
 // Route @ api/commanders/:charterId

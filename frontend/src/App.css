@@ -199,6 +199,7 @@ button:active {
 }
 
 .rwd-table {
+	padding: 1rem;
 	margin: auto;
 	border: 0.2rem solid var(--primary-gold);
 	background: var(--blue);
@@ -231,6 +232,16 @@ button:active {
 	.icons .delete {
 		color: var(--primary-red);
 		margin: 0rem 1rem;
+	}
+
+	input {
+		float: left;
+		margin: auto;
+		width: 50%;
+		text-align: left;
+		
+		padding: .2rem;
+		font-size: .8rem;
 	}
 }
 
@@ -286,8 +297,8 @@ button:active {
 			margin-right: 0.5rem;
 			font-weight: bold;
 			display: inline-block;
+			align-self: center;
 			word-wrap: break-word;
-			border-bottom: 1px solid var(--black-c-25);
 
 			.rwd-table td:first-child {
 				padding-top: 0;
@@ -306,12 +317,13 @@ button:active {
 			display: flex;
 			justify-content: left;
 			align-items: top;
+			align-items: center;
 		}
 		.icons {
 			position: absolute;
-			z-index: 2rem;
-			top: 1rem;
-			right: 0;
+			z-index: 1rem;
+			top: -.5rem;
+			right: -1rem;
 		}
 	}
 
