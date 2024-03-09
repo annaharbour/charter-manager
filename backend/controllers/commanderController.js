@@ -48,8 +48,8 @@ const getCommandersForCharter = asyncHandler(async (req, res) => {
 	try {
 		const { charterId } = req.params;
 
-		const commanders = await Commander.find({ "charters.charter": charterId })
-			.populate("charters.charter")
+		const commanders = await Commander.find({ "charters": charterId })
+			.populate("charters")
 			.sort({ createdAt: "desc" });
 
 		if (!commanders || commanders.length === 0) {
