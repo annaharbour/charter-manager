@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios'
 import { formatDate, formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,10 +10,12 @@ import {
 	faMinus,
 	faPlus,
 	faCamera,
+	faTrash
 } from "@fortawesome/free-solid-svg-icons";
 
 function CommanderItem({ commander, onUpdateCommander }) {
 	const [charters, setCharters] = useState([]);
+	
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedCommander, setUpdatedCommander] = useState({ ...commander });
 
@@ -39,10 +42,14 @@ function CommanderItem({ commander, onUpdateCommander }) {
 		setUpdatedCommander((prev) => ({ ...prev, [name]: value }));
 	};
 
-	function updateCommander(e) {
-		onUpdateCommander(updatedCommander);
-		setIsEditing(false);
-	}
+	const updateCommander = async () => {
+        try {
+            await onUpdateCommander(updatedCommander);
+            setIsEditing(false);
+        } catch(err) {
+            console.error('Commander not updated', err);
+        }
+    }
 
 	function deleteCommander(e) {
 		e.preventDefault();
@@ -117,14 +124,16 @@ function CommanderItem({ commander, onUpdateCommander }) {
 							type="date"
 							name="dateStart"
 							id="date-start"
-							onChange={() => {}}></input>
+							value={updatedCommander.dateStart}
+							onChange={handleChange}></input>
 					</td>
 					<td data-th="Service End:">
 						<input
 							type="date"
 							name="dateEnd"
 							id="date-end"
-							onChange={() => {}}></input>
+							value={updatedCommander.dateEnd}
+							onChange={handleChange}></input>
 					</td>
 				</>
 			) : (
@@ -163,8 +172,15 @@ function CommanderItem({ commander, onUpdateCommander }) {
 						</span>
 						<span>
 							<FontAwesomeIcon
-								style={{ color: "#991a1e" }}
 								icon={faX}
+								style={{ color: "black" }}
+								onClick={() => setIsEditing(!isEditing)}
+							/>
+						</span>
+						<span>
+							<FontAwesomeIcon
+								style={{ color: "#991a1e" }}
+								icon={faTrash}
 								onClick={deleteCommander}
 							/>
 						</span>

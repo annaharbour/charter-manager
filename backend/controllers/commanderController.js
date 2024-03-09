@@ -112,9 +112,8 @@ const updateCommanderById = asyncHandler(async (req, res) => {
 			commander.isDeceased = isDeceased;
 			commander.postNum = postNum;
 
-			commander.charters = charters.map((charterId) => ({
-				charter: charterId,
-			}));
+			commander.charters = charters.map((charter) => charter._id);
+
 
 			const updatedCommander = await commander.save();
 			res.json(updatedCommander);
