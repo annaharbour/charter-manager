@@ -1,6 +1,5 @@
-import React, { useState , useEffect} from "react";
-import { formatDate } from "../common/formatDate";
-import {formatYear} from '../common/formatDate'
+import React, { useState, useEffect } from "react";
+import { formatDate, formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faStar,
@@ -8,13 +7,12 @@ import {
 	faPenToSquare,
 	faCheck,
 	faMinus,
-	faPlus
+	faPlus,
+	faCamera,
 } from "@fortawesome/free-solid-svg-icons";
 
-
-
 function CommanderItem({ commander, onUpdateCommander }) {
-	const [charters, setCharters] = useState([])
+	const [charters, setCharters] = useState([]);
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedCommander, setUpdatedCommander] = useState({ ...commander });
 
@@ -28,7 +26,7 @@ function CommanderItem({ commander, onUpdateCommander }) {
 				console.error("Error fetching charters: ", error);
 			}
 		};
-	
+
 		fetchCharters();
 	}, []);
 
@@ -55,85 +53,121 @@ function CommanderItem({ commander, onUpdateCommander }) {
 		<tr>
 			{isEditing ? (
 				<>
-					<td data-th="Commander Name:">
-						
+					<td data-th="Name:">
 						<input
 							type="text"
 							name="name"
 							value={updatedCommander.name}
 							onChange={handleChange}></input>
 					</td>
-						
+					<td>
+						<div className="icons">
+							{/* TODO: Toggle commander isDeceased value, set star to gold if deceased, white if not*/}
+							<span>
+								<FontAwesomeIcon
+									icon={faStar}
+									style={{ color: "#ffffff" }}
+									onClick={() => {}}
+								/>
+							</span>
+							<span>
+								{/* TODO: Image upload / preview for commander  */}
+								<FontAwesomeIcon style={{ color: "#ffffff" }} icon={faCamera} />
+							</span>
+						</div>
+					</td>
 					<td data-th="Post Number:">
 						<input
-							type="number"
+							type="text"
 							name="postNum"
 							value={updatedCommander.postNum}
 							onChange={handleChange}></input>
 					</td>
-					<td data-th="Service:">
-					<input
-							type="text"
-							onChange={handleChange}
-							value={`${formatDate(
-								commander.dateStart
-							)}`}
-						/>
-						-
-						<input
-							type="text"
-							onChange={handleChange}
-							value={`${formatDate(
-								commander.dateEnd
-							)}`}
-						/>
-					</td>
-					<td data-th="Charters">
+					<td className="charters-edit" data-th="Charters:">
 						{commander.charters.map((charter) => (
-							
 							<li key={charter._id}>
-								{/* TODO: Remove Charter Function */}
-								<FontAwesomeIcon className="icon faMinus" onClick={() => {}} icon={faMinus} style={{color: 'red'}}/>
+								{/* TODO: Remove Charter Assignment Function */}
 								{formatYear(charter.dateIssued)}
+								<FontAwesomeIcon
+									className="icon faMinus"
+									onClick={() => {}}
+									icon={faMinus}
+									style={{ color: "red" }}
+								/>
 							</li>
 						))}
-						<select name="charter" id="charter-select">
-							{charters.map((charter) =>
-							<option key={charter.dateIssued}>{formatYear(charter.dateIssued)}</option>
-							 )}
-							
-						</select>
-						{/* TODO: Assign Commander Charter Function */}
-						<FontAwesomeIcon icon={faPlus} style={{color: 'black'}}/>
+						<div>
+							<select name="charter" id="charter-select">
+								{charters.map((charter) => (
+									<option key={charter.dateIssued}>
+										{formatYear(charter.dateIssued)}
+									</option>
+								))}
+							</select>
+							{/* TODO: Assign Commander Charter Function */}
+							<FontAwesomeIcon
+								icon={faPlus}
+								className="faPlus"
+								style={{ color: "black" }}
+							/>
+						</div>
+					</td>
+					<td data-th="Service Start:">
+						<input
+							type="date"
+							name="dateStart"
+							id="date-start"
+							onChange={() => {}}></input>
+					</td>
+					<td data-th="Service End:">
+						<input
+							type="date"
+							name="dateEnd"
+							id="date-end"
+							onChange={() => {}}></input>
 					</td>
 				</>
 			) : (
 				<>
-					<td data-th="Commander Name:">
-						{commander.isDeceased ? <FontAwesomeIcon icon={faStar} /> : ""}{" "}
-						{commander.name}
-					</td>
+					<td data-th="Commander Name:">{commander.name}</td>
+
+					{commander.isDeceased ? (
+						<td>
+							<FontAwesomeIcon style={{ color: "#a79055" }} icon={faStar} />{" "}
+						</td>
+					) : (
+						<td></td>
+					)}
 					<td data-th="Post Number:">{commander.postNum}</td>
-					<td data-th="Service:">{`${formatDate(
-						commander.dateStart
-					)}- ${formatDate(commander.dateEnd)}`}</td>
 					<td data-th="Charters:">
 						{commander.charters.map((charter) => (
-							<li key={charter._id}>{charter.charter}</li>
+							<li key={charter._id}>{formatYear(charter.dateIssued)}</li>
 						))}
 					</td>
+					<td data-th="Service Start:">{`${formatDate(
+						commander.dateStart
+					)}`}</td>
+					<td data-th="Service End:">{`${formatDate(commander.dateEnd)}`}</td>
 				</>
 			)}
 
 			<td>
 				{isEditing ? (
 					<div className="icons">
-						<FontAwesomeIcon icon={faCheck} onClick={updateCommander}  style={{color: 'black'}}/>
-						<FontAwesomeIcon
-							className="delete"
-							icon={faX}
-							onClick={deleteCommander}
-						/>
+						<span>
+							<FontAwesomeIcon
+								icon={faCheck}
+								onClick={updateCommander}
+								style={{ color: "black" }}
+							/>
+						</span>
+						<span>
+							<FontAwesomeIcon
+								style={{ color: "#991a1e" }}
+								icon={faX}
+								onClick={deleteCommander}
+							/>
+						</span>
 					</div>
 				) : (
 					<div className="icons">

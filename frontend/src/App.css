@@ -138,7 +138,8 @@ h3.charter-year {
 	color: var(--blue);
 }
 
-input {
+input,
+select {
 	width: 40%;
 	padding: 0.5rem;
 	border-radius: 5px;
@@ -147,7 +148,9 @@ input {
 	font-size: inherit;
 }
 
-input:focus {
+input:focus[type="text"],
+input:focus[type="date"],
+select {
 	box-shadow: 0 0 0.5rem 0 var(--black-c-75);
 	outline: none;
 }
@@ -193,12 +196,15 @@ button:active {
 /* TABLES */
 
 .commanders-admin {
+	overflow-x: hidden;
 	display: flex;
 	justify-content: center;
 	margin: auto;
 }
 
 .rwd-table {
+	font-size: 1.2rem;
+	width: 70vw;
 	padding: 1rem;
 	margin: auto;
 	border: 0.2rem solid var(--primary-gold);
@@ -222,26 +228,27 @@ button:active {
 		color: var(--primary-gold);
 	}
 	.icons {
-		display: flex;
-		width: 4rem;
 		font-size: 1.2rem;
+		justify-content: center;
+		margin: auto;
+		span {
+			margin: auto 1rem;
+		}
 	}
+
 	.icons:hover {
 		cursor: pointer;
 	}
-	.icons .delete {
-		color: var(--primary-red);
-		margin: 0rem 1rem;
-	}
 
-	input {
-		float: left;
+	input,
+	select {
 		margin: auto;
-		width: 50%;
-		text-align: left;
-		
-		padding: .2rem;
-		font-size: .8rem;
+		width: 100%;
+		padding: 0.2rem;
+		font-size: 1rem;
+	}
+	option {
+		text-align: center;
 	}
 }
 
@@ -280,11 +287,33 @@ button:active {
 		width: 100%;
 		font-size: 2rem;
 	}
-}
-
-@media (max-width: 600px) {
 	.rwd-table {
 		width: 100%;
+		overflow-x: hidden;
+		text-align: left;
+		td {
+			width: 50%;
+			padding: 2rem 0;
+		}
+
+		.faMinus,
+		.faPlus {
+			margin: auto 0.5rem;
+		}
+		.charters-edit li,
+		div {
+			justify-content: center;
+			display: flex;
+			margin: 0 0.1rem;
+		}
+	}
+}
+
+@media (max-width: 750px) and (orientation: portrait) {
+	.rwd-table {
+		overflow-x: hidden;
+		padding: 1rem;
+		width: 100vw;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -303,31 +332,21 @@ button:active {
 			.rwd-table td:first-child {
 				padding-top: 0;
 			}
-
-			.rwd-table td:last-child {
-				padding-bottom: 0;
-			}
-
-			.rwd-table td:before {
-				display: none;
-			}
 		}
 		td {
+			width: 100%;
 			padding: 0rem;
 			display: flex;
-			justify-content: left;
 			align-items: top;
 			align-items: center;
 		}
-		.icons {
-			position: absolute;
-			z-index: 1rem;
-			top: -.5rem;
-			right: -1rem;
+
+		.charters-edit li,
+		div {
+			display: flex;
+			margin: 0 0.1rem;
 		}
 	}
-
-	/* Add a heading with the data from all th before each td */
 }
 
 @media (min-height: 1000px) and (orientation: portrait) {

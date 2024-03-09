@@ -20,9 +20,9 @@ function CommanderList() {
 		fetchCommanders();
 	}, []);
 
-	function onUpdateCommander(updatedCommander){
+	function onUpdateCommander(updatedCommander) {
 		// update database with new commander using axios
-		console.log(updatedCommander)
+		console.log(updatedCommander);
 	}
 
 	return (
@@ -31,15 +31,20 @@ function CommanderList() {
 				<thead>
 					<tr>
 						<th>Commander Name</th>
-						<th>Post #</th>
-						<th>Service</th>
-						<th>Charters</th>
 						<th></th>
+						<th>Post #</th>
+						<th>Charters List</th>
+						<th>Service Start</th>
+						<th>Service End</th>
 					</tr>
 				</thead>
 				<tbody>
 					{commanders.map((commander) => (
-						<CommanderItem key={commander._id} commander={commander} onUpdateCommander={onUpdateCommander}/>
+						<CommanderItem
+							key={commander._id}
+							commander={commander}
+							onUpdateCommander={onUpdateCommander}
+						/>
 					))}
 					<tr>
 						<td>
