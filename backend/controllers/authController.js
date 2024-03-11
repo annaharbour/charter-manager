@@ -146,8 +146,6 @@ const updateUser = asyncHandler(async (req, res) => {
 
 			const updatedUser = await user.save();
 
-			console.log("Response:", res);
-
 			res.status(200).json({
 				username: updatedUser.userName,
 				email: updatedUser.email,

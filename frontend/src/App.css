@@ -250,6 +250,20 @@ button:active {
 	option {
 		text-align: center;
 	}
+	.charters-edit li,
+	div {
+		display: flex;
+		margin: 0 .5rem;
+		align-items: center;
+	}
+	.faMinus,
+	.faPlus {
+		margin: auto .5rem;
+	}
+	.faMinus:hover,
+	.faPlus:hover {
+		cursor: pointer;
+	}
 }
 
 @media (max-width: 1400px) {
@@ -295,17 +309,6 @@ button:active {
 			width: 50%;
 			padding: 2rem 0;
 		}
-
-		.faMinus,
-		.faPlus {
-			margin: auto 0.5rem;
-		}
-		.charters-edit li,
-		div {
-			justify-content: center;
-			display: flex;
-			margin: 0 0.1rem;
-		}
 	}
 }
 
@@ -343,11 +346,7 @@ button:active {
 		}
 		
 
-		.charters-edit li,
-		div {
-			display: flex;
-			margin: 0 0.1rem;
-		}
+
 	}
 }
 
