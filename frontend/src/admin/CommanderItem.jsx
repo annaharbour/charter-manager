@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { formatDate, formatYear } from "../common/formatDate";
+import axios from "axios";
+import { formatDate, formatDay, formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faStar,
@@ -9,19 +10,20 @@ import {
 	faMinus,
 	faPlus,
 	faCamera,
+	faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
 function CommanderItem({ commander, onUpdateCommander }) {
 	const [charters, setCharters] = useState([]);
+	const [selectedCharter, setSelectedCharter] = useState("");
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedCommander, setUpdatedCommander] = useState({ ...commander });
 
 	useEffect(() => {
 		const fetchCharters = async () => {
 			try {
-				const response = await fetch("http://localhost:5000/api/charters");
-				const data = await response.json();
-				setCharters(data.charters);
+				const res = await axios.get("http://localhost:5000/api/charters");
+				setCharters(res.data.charters);
 			} catch (error) {
 				console.error("Error fetching charters: ", error);
 			}
@@ -34,15 +36,55 @@ function CommanderItem({ commander, onUpdateCommander }) {
 		setIsEditing(true);
 	};
 
+	const handleCancelClick = (e) => {
+		setSelectedCharter("");
+		setUpdatedCommander((prev) => ({
+			...prev,
+			charters: prev.charters.filter(
+				(charter) => charter._id !== selectedCharter
+			),
+			name: commander.name,
+			postNum: commander.postNum,
+			dateStart: commander.dateStart,
+			dateEnd: commander.dateEnd
+		}));
+		setIsEditing(false)
+	};
+
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setUpdatedCommander((prev) => ({ ...prev, [name]: value }));
 	};
 
-	function updateCommander(e) {
-		onUpdateCommander(updatedCommander);
-		setIsEditing(false);
-	}
+	const handleAddCharter = (charterId) => {
+		const selectedCharter = charters.find(
+			(charter) => charter._id === charterId
+		);
+
+		setUpdatedCommander((prev) => ({
+			...prev,
+			charters: [...prev.charters, selectedCharter],
+		}));
+		console.log(charters);
+	};
+
+	const handleRemoveCharter = (charterId) => {
+		console.log(charterId);
+		setUpdatedCommander((prev) => ({
+			...prev,
+			charters: prev.charters.filter((charter) => charter._id !== charterId),
+		}));
+	};
+
+	const updateCommander = async () => {
+		console.log(updatedCommander);
+		try {
+			await onUpdateCommander(updatedCommander);
+			setIsEditing(false);
+		} catch (err) {
+			console.error("Commander not updated", err);
+		}
+	};
 
 	function deleteCommander(e) {
 		e.preventDefault();
@@ -84,31 +126,43 @@ function CommanderItem({ commander, onUpdateCommander }) {
 							onChange={handleChange}></input>
 					</td>
 					<td className="charters-edit" data-th="Charters:">
-						{commander.charters.map((charter) => (
+						{updatedCommander.charters.map((charter) => (
 							<li key={charter._id}>
-								{/* TODO: Remove Charter Assignment Function */}
 								{formatYear(charter.dateIssued)}
 								<FontAwesomeIcon
 									className="icon faMinus"
-									onClick={() => {}}
+									onClick={() => handleRemoveCharter(charter._id)}
 									icon={faMinus}
 									style={{ color: "red" }}
 								/>
 							</li>
 						))}
+
 						<div>
-							<select name="charter" id="charter-select">
-								{charters.map((charter) => (
-									<option key={charter.dateIssued}>
-										{formatYear(charter.dateIssued)}
-									</option>
-								))}
+							<select
+								name="charter"
+								id="charter-select"
+								value={selectedCharter}
+								onChange={(e) => setSelectedCharter(e.target.value)}>
+								<option value="">Charter</option>
+								{charters
+									.filter(
+										(charter) =>
+											!updatedCommander.charters.some(
+												(assignedCharter) => assignedCharter._id === charter._id
+											)
+									)
+									.map((charter) => (
+										<option key={charter._id} value={charter._id}>
+											{formatYear(charter.dateIssued)}
+										</option>
+									))}
 							</select>
-							{/* TODO: Assign Commander Charter Function */}
 							<FontAwesomeIcon
 								icon={faPlus}
 								className="faPlus"
 								style={{ color: "black" }}
+								onClick={() => handleAddCharter(selectedCharter)}
 							/>
 						</div>
 					</td>
@@ -117,14 +171,14 @@ function CommanderItem({ commander, onUpdateCommander }) {
 							type="date"
 							name="dateStart"
 							id="date-start"
-							onChange={() => {}}></input>
+							onChange={handleChange}></input>
 					</td>
 					<td data-th="Service End:">
 						<input
 							type="date"
 							name="dateEnd"
 							id="date-end"
-							onChange={() => {}}></input>
+							onChange={handleChange}></input>
 					</td>
 				</>
 			) : (
@@ -163,8 +217,15 @@ function CommanderItem({ commander, onUpdateCommander }) {
 						</span>
 						<span>
 							<FontAwesomeIcon
-								style={{ color: "#991a1e" }}
 								icon={faX}
+								style={{ color: "black" }}
+								onClick={handleCancelClick}
+							/>
+						</span>
+						<span>
+							<FontAwesomeIcon
+								style={{ color: "#991a1e" }}
+								icon={faTrash}
 								onClick={deleteCommander}
 							/>
 						</span>

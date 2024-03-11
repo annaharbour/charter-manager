@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import CommanderItem from "./CommanderItem";
@@ -20,10 +21,22 @@ function CommanderList() {
 		fetchCommanders();
 	}, []);
 
-	function onUpdateCommander(updatedCommander) {
-		// update database with new commander using axios
-		console.log(updatedCommander);
-	}
+	const updateCommander = async (updatedCommander) => {
+		try {
+			const res = await axios.put(
+				`http://localhost:5000/api/commanders/${updatedCommander._id}`,
+				updatedCommander
+			);
+			const updatedData = res.data;
+			setCommanders((prev) =>
+				prev.map((commander) =>
+					commander._id === updatedData._id ? updatedData : commander
+				)
+			);
+		} catch (err) {
+			console.error("Commander not updated", err);
+		}
+	};
 
 	return (
 		<div>
@@ -43,7 +56,7 @@ function CommanderList() {
 						<CommanderItem
 							key={commander._id}
 							commander={commander}
-							onUpdateCommander={onUpdateCommander}
+							onUpdateCommander={updateCommander}
 						/>
 					))}
 					<tr>
