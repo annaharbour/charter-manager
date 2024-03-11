@@ -1,21 +1,10 @@
 export function formatDate(dateString) {
-	const date = new Date(dateString);
-	const options = { month: "long", day: "numeric", year: "numeric" };
-	return date.toLocaleDateString("en-US", options);
+    const date = new Date(`${dateString}T00:00:00Z`);
+	date.setDate(date.getDate() + 1); // Add one day
+	return date.toLocaleDateString("en-US", { timezone: 'UTC', month: "long", day: "numeric", year: "numeric" });
 }
 
 export function formatYear(dateString) {
 	const date = new Date(dateString);
 	return date.getFullYear();
 }
-
-export function formatMonth(dateString) {
-	const month = new Date(dateString);
-	return month.getMonth();
-}
-
-export function formatDay(dateString) {
-	const day = new Date(dateString);
-	return day.getDay();
-}
-

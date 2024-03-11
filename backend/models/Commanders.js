@@ -11,11 +11,11 @@ const CommanderSchema = new Schema(
 			type: String,
 		},
 		dateStart: {
-			type: Date,
+			type: String,
 			required: true,
 		},
 		dateEnd: {
-			type: Date,
+			type: String,
 			required: true,
 		},
 		postNum: {
