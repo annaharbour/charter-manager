@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate, formatDay, formatYear } from "../common/formatDate";
+import { formatDate, formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faStar,
@@ -46,9 +46,9 @@ function CommanderItem({ commander, onUpdateCommander }) {
 			name: commander.name,
 			postNum: commander.postNum,
 			dateStart: commander.dateStart,
-			dateEnd: commander.dateEnd
+			dateEnd: commander.dateEnd,
 		}));
-		setIsEditing(false)
+		setIsEditing(false);
 	};
 
 	const handleChange = (e) => {
@@ -57,15 +57,16 @@ function CommanderItem({ commander, onUpdateCommander }) {
 	};
 
 	const handleAddCharter = (charterId) => {
-		const selectedCharter = charters.find(
-			(charter) => charter._id === charterId
-		);
+		if (charterId) {
+			const selectedCharter = charters.find(
+				(charter) => charter._id === charterId
+			);
 
-		setUpdatedCommander((prev) => ({
-			...prev,
-			charters: [...prev.charters, selectedCharter],
-		}));
-		console.log(charters);
+			setUpdatedCommander((prev) => ({
+				...prev,
+				charters: [...prev.charters, selectedCharter],
+			}));
+		}
 	};
 
 	const handleRemoveCharter = (charterId) => {
@@ -114,7 +115,12 @@ function CommanderItem({ commander, onUpdateCommander }) {
 							</span>
 							<span>
 								{/* TODO: Image upload / preview for commander  */}
-								<FontAwesomeIcon style={{ color: "#ffffff" }} icon={faCamera} />
+								<label>
+									<FontAwesomeIcon
+										style={{ color: "#ffffff" }}
+										icon={faCamera}
+									/>
+								</label>
 							</span>
 						</div>
 					</td>
