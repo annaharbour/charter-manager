@@ -28,6 +28,7 @@ function CommanderList() {
 				updatedCommander
 			);
 			const updatedData = res.data;
+			console.log(updatedData)
 			setCommanders((prev) =>
 				prev.map((commander) =>
 					commander._id === updatedData._id ? updatedData : commander
