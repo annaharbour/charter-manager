@@ -16,6 +16,7 @@ import {
 function CommanderItem({ commander, onUpdateCommander }) {
 	const [charters, setCharters] = useState([]);
 	const [selectedCharter, setSelectedCharter] = useState("");
+	const [image, setImage] = useState("");
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedCommander, setUpdatedCommander] = useState({ ...commander });
 
@@ -47,6 +48,7 @@ function CommanderItem({ commander, onUpdateCommander }) {
 			postNum: commander.postNum,
 			dateStart: commander.dateStart,
 			dateEnd: commander.dateEnd,
+			image: commander.image
 		}));
 		setIsEditing(false);
 	};
@@ -76,17 +78,33 @@ function CommanderItem({ commander, onUpdateCommander }) {
 			charters: prev.charters.filter((charter) => charter._id !== charterId),
 		}));
 	};
+	const handleFileChange = async (e) => {
+		try {
+			const file = e.target.files[0];
+			const formData = new FormData();
+			formData.append('image', file);
+			const uploadResponse = await axios.post('http://localhost:5000/api/upload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+			const uploadedImageUrl = uploadResponse.data.image;
+			setImage(uploadedImageUrl);
+		} catch (err) {
+			console.error(err?.response?.data?.message || err.message);
+		}
+	};
 
 	const updateCommander = async () => {
-		console.log(updatedCommander);
 		try {
-			await onUpdateCommander(updatedCommander);
+			const updatedCommanderWithImage = { ...updatedCommander, image };
+			await onUpdateCommander(updatedCommanderWithImage);			
 			setIsEditing(false);
 		} catch (err) {
 			console.error("Commander not updated", err);
 		}
 	};
-
+	
 	function deleteCommander(e) {
 		e.preventDefault();
 		setIsEditing(false);
@@ -114,13 +132,19 @@ function CommanderItem({ commander, onUpdateCommander }) {
 								/>
 							</span>
 							<span>
-								{/* TODO: Image upload / preview for commander  */}
-								<label>
+								<label htmlFor="file-input">
 									<FontAwesomeIcon
-										style={{ color: "#ffffff" }}
 										icon={faCamera}
+										style={{ color: "#ffffff", cursor: "pointer" }}
 									/>
 								</label>
+								<input
+									name="image"
+									id="file-input"
+									type="file"
+									style={{ display: "none" }}
+									onChange={handleFileChange}
+								/>
 							</span>
 						</div>
 					</td>
