@@ -14,9 +14,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function CommanderItem({ commander, onUpdateCommander }) {
+	const [isDeceased, setIsDeceased] = useState(commander.isDeceased);
 	const [charters, setCharters] = useState([]);
 	const [selectedCharter, setSelectedCharter] = useState("");
-	const [image, setImage] = useState("");
+	const [image, setImage] = useState(commander.image);
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedCommander, setUpdatedCommander] = useState({ ...commander });
 
@@ -78,27 +79,57 @@ function CommanderItem({ commander, onUpdateCommander }) {
 			charters: prev.charters.filter((charter) => charter._id !== charterId),
 		}));
 	};
+	// const handleFileChange = async (e) => {
+	// 	e.preventDefault()
+	// 	try {
+	// 		const file = e.target.files[0];
+	// 		const formData = new FormData();
+	// 		formData.append('image', file);
+	// 		const uploadResponse = await axios.post('http://localhost:5000/api/upload', formData, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     });
+	// 		const uploadedImageUrl = uploadResponse.data.image;
+	// 		setImage(uploadedImageUrl);
+	// 	} catch (err) {
+	// 		console.error(err?.response?.data?.message || err.message);
+	// 	}
+	// };
+
 	const handleFileChange = async (e) => {
+		e.preventDefault();
+		const file = e.target.files[0];
+		if (!file) return; // No file selected, do nothing
+	
 		try {
-			const file = e.target.files[0];
 			const formData = new FormData();
 			formData.append('image', file);
 			const uploadResponse = await axios.post('http://localhost:5000/api/upload', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			});
 			const uploadedImageUrl = uploadResponse.data.image;
 			setImage(uploadedImageUrl);
 		} catch (err) {
 			console.error(err?.response?.data?.message || err.message);
 		}
 	};
+	
+	
+	
+	
+
+	const onStarClick = () => {
+		setIsDeceased(!isDeceased)
+	}
 
 	const updateCommander = async () => {
 		try {
-			const updatedCommanderWithImage = { ...updatedCommander, image };
+			const updatedCommanderWithImage = { ...updatedCommander, image, isDeceased };
 			await onUpdateCommander(updatedCommanderWithImage);			
+			setIsDeceased(isDeceased)
 			setIsEditing(false);
 		} catch (err) {
 			console.error("Commander not updated", err);
@@ -127,8 +158,10 @@ function CommanderItem({ commander, onUpdateCommander }) {
 							<span>
 								<FontAwesomeIcon
 									icon={faStar}
-									style={{ color: "#ffffff" }}
-									onClick={() => {}}
+									style={{ color: isDeceased ? "#a79055" : "#ffffff" }}
+									value={updateCommander.isDeceased}
+									onClick={onStarClick}
+
 								/>
 							</span>
 							<span>

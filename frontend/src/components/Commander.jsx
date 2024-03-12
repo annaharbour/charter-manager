@@ -4,11 +4,12 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { formatDate } from "../common/formatDate";
 
 function Commander({ name, image, isDeceased, postNum, dateStart, dateEnd }) {
+	console.log(image)
 	return (
 		<div className="commander-container">
 			<div className="commander-img">
-				<img src={image} alt={name} />
-				{!isDeceased ? <FontAwesomeIcon className="star" icon={faStar} /> : ""}
+				<img src={`/uploads/${image}`} alt={name} />
+				{isDeceased && <FontAwesomeIcon className="star" icon={faStar} />}
 			</div>
 			<div className="commander-info">
 				<h4>{name}</h4>
