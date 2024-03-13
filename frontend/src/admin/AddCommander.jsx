@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { formatDate, formatYear } from "../common/formatDate";
+import { formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faStar,
 	faX,
-	faPenToSquare,
 	faCheck,
 	faMinus,
 	faPlus,
 	faCamera,
-	faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 
-function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
-	const [isDeceased, setIsDeceased] = useState(commander.isDeceased);
+function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
+	const [isDeceased, setIsDeceased] = useState(false);
 	const [charters, setCharters] = useState([]);
 	const [selectedCharter, setSelectedCharter] = useState("");
-	const [image, setImage] = useState(commander.image);
-	const [isEditing, setIsEditing] = useState(false);
-	const [updatedCommander, setUpdatedCommander] = useState({ ...commander });
+	const [image, setImage] = useState("");
+	const [newCommander, setNewCommander] = useState({
+		name: "",
+		postNum: "",
+		dateStart: "",
+		dateEnd: "",
+		image: "",
+	});
 
 	useEffect(() => {
 		const fetchCharters = async () => {
@@ -34,29 +37,18 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 		fetchCharters();
 	}, []);
 
-	const handleEditClick = () => {
-		setIsEditing(true);
+	const handleIsCreating = () => {
+		setIsCreating(true);
 	};
 
 	const handleCancelClick = (e) => {
 		setSelectedCharter("");
-		setUpdatedCommander((prev) => ({
-			...prev,
-			charters: prev.charters.filter(
-				(charter) => charter._id !== selectedCharter
-			),
-			name: commander.name,
-			postNum: commander.postNum,
-			dateStart: commander.dateStart,
-			dateEnd: commander.dateEnd,
-			image: commander.image
-		}));
-		setIsEditing(false);
+		setIsCreating(false);
 	};
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setUpdatedCommander((prev) => ({ ...prev, [name]: value }));
+		setNewCommander((prev) => ({ ...prev, [name]: value }));
 	};
 
 	const handleAddCharter = (charterId) => {
@@ -65,16 +57,16 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 				(charter) => charter._id === charterId
 			);
 
-			setUpdatedCommander((prev) => ({
+			setNewCommander((prev) => ({
 				...prev,
-				charters: [...prev.charters, selectedCharter],
+                charters: Array.isArray(prev.charters) ? [...prev.charters, selectedCharter] : [selectedCharter],
 			}));
 		}
 	};
 
 	const handleRemoveCharter = (charterId) => {
 		console.log(charterId);
-		setUpdatedCommander((prev) => ({
+		setNewCommander((prev) => ({
 			...prev,
 			charters: prev.charters.filter((charter) => charter._id !== charterId),
 		}));
@@ -83,57 +75,51 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 	const handleFileChange = async (e) => {
 		e.preventDefault();
 		const file = e.target.files[0];
-		if (!file) return; 
-	
+		if (!file) return;
+
 		try {
 			const formData = new FormData();
-			formData.append('image', file);
-			const uploadResponse = await axios.post('http://localhost:5000/api/upload', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
+			formData.append("image", file);
+			const uploadResponse = await axios.post(
+				"http://localhost:5000/api/upload",
+				formData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
 				}
-			});
+			);
 			const uploadedImageUrl = uploadResponse.data.image;
 			setImage(uploadedImageUrl);
 		} catch (err) {
 			console.error(err?.response?.data?.message || err.message);
 		}
 	};
-	
-	
-	
-	
 
 	const onStarClick = () => {
-		setIsDeceased(!isDeceased)
-	}
+		setIsDeceased(!isDeceased);
+	};
 
-	const updateCommander = async () => {
+	const handleAddNewCommander = async () => {
 		try {
-			const updatedCommanderWithImage = { ...updatedCommander, image, isDeceased };
-			await onUpdateCommander(updatedCommanderWithImage);			
-			setIsDeceased(isDeceased)
-			setIsEditing(false);
+			const newCommanderWithImage = { ...newCommander, image, isDeceased };
+			await addNewCommander(newCommanderWithImage);
+			setIsDeceased(isDeceased);
+			setIsCreating(false);
 		} catch (err) {
-			console.error("Commander not updated", err);
+			console.error("Commander not created", err);
 		}
 	};
-	
-	const handleDeleteClick = (e) => {
-		e.preventDefault()
-		onDeleteCommander(commander._id);
-		setIsEditing(false)
-	  };
 
 	return (
 		<tr>
-			{isEditing ? (
+			{isCreating ? (
 				<>
 					<td data-th="Name:">
 						<input
 							type="text"
 							name="name"
-							value={updatedCommander.name}
+							value={newCommander.name}
 							onChange={handleChange}></input>
 					</td>
 					<td>
@@ -142,9 +128,8 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 								<FontAwesomeIcon
 									icon={faStar}
 									style={{ color: isDeceased ? "#a79055" : "#ffffff" }}
-									value={updateCommander.isDeceased}
+									value={newCommander.isDeceased}
 									onClick={onStarClick}
-
 								/>
 							</span>
 							<span>
@@ -168,11 +153,11 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 						<input
 							type="text"
 							name="postNum"
-							value={updatedCommander.postNum}
+							value={newCommander.postNum}
 							onChange={handleChange}></input>
 					</td>
 					<td className="charters-edit" data-th="Charters:">
-						{updatedCommander.charters.map((charter) => (
+						{newCommander.charters && newCommander.charters.map((charter) => (
 							<li key={charter._id}>
 								{formatYear(charter.dateIssued)}
 								<FontAwesomeIcon
@@ -192,12 +177,6 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 								onChange={(e) => setSelectedCharter(e.target.value)}>
 								<option value="">Charter</option>
 								{charters
-									.filter(
-										(charter) =>
-											!updatedCommander.charters.some(
-												(assignedCharter) => assignedCharter._id === charter._id
-											)
-									)
 									.map((charter) => (
 										<option key={charter._id} value={charter._id}>
 											{formatYear(charter.dateIssued)}
@@ -209,7 +188,7 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 								className="faPlus"
 								style={{ color: "black" }}
 								onClick={() => handleAddCharter(selectedCharter)}
-							/>
+							/> 
 						</div>
 					</td>
 					<td data-th="Service Start:">
@@ -228,36 +207,15 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 					</td>
 				</>
 			) : (
-				<>
-					<td data-th="Commander Name:">{commander.name}</td>
-
-					{commander.isDeceased ? (
-						<td>
-							<FontAwesomeIcon style={{ color: "#a79055" }} icon={faStar} />{" "}
-						</td>
-					) : (
-						<td></td>
-					)}
-					<td data-th="Post Number:">{commander.postNum}</td>
-					<td data-th="Charters:">
-						{commander.charters.map((charter) => (
-							<li key={charter._id}>{formatYear(charter.dateIssued)}</li>
-						))}
-					</td>
-					<td data-th="Service Start:">{`${formatDate(
-						commander.dateStart
-					)}`}</td>
-					<td data-th="Service End:">{`${formatDate(commander.dateEnd)}`}</td>
-				</>
-			)}
-
+                <></>
+			)} 
 			<td>
-				{isEditing ? (
+				{isCreating ? (
 					<div className="icons">
 						<span>
 							<FontAwesomeIcon
 								icon={faCheck}
-								onClick={updateCommander}
+								onClick={handleAddNewCommander}
 								style={{ color: "black" }}
 							/>
 						</span>
@@ -268,17 +226,11 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 								onClick={handleCancelClick}
 							/>
 						</span>
-						<span>
-							<FontAwesomeIcon
-								style={{ color: "#991a1e" }}
-								icon={faTrash}
-								onClick={handleDeleteClick}
-							/>
-						</span>
 					</div>
 				) : (
-					<div className="icons">
-						<FontAwesomeIcon icon={faPenToSquare} onClick={handleEditClick} />
+					<div className="icons" onClick={handleIsCreating} >
+                        Add Commander
+						<FontAwesomeIcon icon={faPlus} style={{marginLeft: '.5rem'}}/>
 					</div>
 				)}
 			</td>
@@ -286,4 +238,4 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 	);
 }
 
-export default CommanderItem;
+export default AddCommander;
