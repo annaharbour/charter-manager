@@ -7,6 +7,7 @@ import {
 	faCaretUp,
 } from "@fortawesome/free-solid-svg-icons";
 import CommanderList from "./CommanderList";
+import CharterList from "./CharterList";
 
 function Admin() {
 	const [error, setError] = useState("");
@@ -69,7 +70,9 @@ function Admin() {
 						/>
 					</div>
 					{toggleCharters ? (
-						<div className="commanders-charters">Charters</div>
+						<div className="commanders-charters">
+							<CharterList/>
+						</div>
 					) : (
 						""
 					)}

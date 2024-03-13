@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router";
 import PrivateRoute from "./admin/PrivateRoute";
 import "./App.css";
 import Home from "./components/Home";
-import Nav from "./components/Nav";
 import Admin from "./admin/Admin";
 import SignIn from "./admin/SignIn";
 import CharterList from './admin/CharterList'
@@ -18,7 +17,6 @@ function App() {
 	  
 	return (
 		<>
-		{isAuthenticated && <Nav/>}
 			<header>
 				<img
 					className="vfw-logo"

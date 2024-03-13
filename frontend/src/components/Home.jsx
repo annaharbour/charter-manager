@@ -23,13 +23,9 @@ function CommanderList() {
 	useEffect(() => {
 		const fetchCommandersForCharter = async (charterId) => {
 			try {
-				const response = await fetch(
-					`http://localhost:5000/api/commanders/charter/${charterId}`
-				);
+				const response = await fetch(`http://localhost:5000/api/commanders/charter/${charterId}`);
 				if (!response.ok) {
-					throw new Error(
-						`Error fetching commanders for charter ${charterId}: ${response.statusText}`
-					);
+					throw new Error(`Error fetching commanders for charter ${charterId}: ${response.statusText}`);
 				}
 				const data = await response.json();
 				const { commanders } = data;
@@ -39,9 +35,10 @@ function CommanderList() {
 				}));
 			} catch (error) {
 				console.error(error);
-				throw error;
+				// You can handle the error here, such as displaying a message to the user
 			}
 		};
+		
 
 		charters.forEach((charter) => {
 			fetchCommandersForCharter(charter._id);

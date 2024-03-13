@@ -37,11 +37,9 @@ function CommanderList() {
 			);
 			const updatedData = res.data;
 			console.log(updatedData);
-			setCommanders((prev) =>
-				prev.map((commander) =>
-					commander._id === updatedData._id ? updatedData : commander
-				)
-			);
+			setCommanders(prev => [...prev.map((commander) => 
+				commander._id === updatedData._id ? updatedData : commander
+			)]);			
 		} catch (err) {
 			console.error("Commander not updated", err);
 		}
@@ -55,7 +53,7 @@ function CommanderList() {
 				newCommander
 			);
 			const addedCommander = res.data;
-			setCommanders((prev) => [...prev, addedCommander]);
+			setCommanders(prev => [...prev, addedCommander]);
 			setNewCommander({
 				name: "",
 				postNum: "",
@@ -72,8 +70,8 @@ function CommanderList() {
 const deleteCommander = async (commanderId) => {
   try {
     await axios.delete(`http://localhost:5000/api/commanders/${commanderId}`);
-    setCommanders((prev) => prev.filter((commander) => commander._id !== commanderId));
-  } catch (err) {
+	setCommanders(prev => [...prev.filter((commander) => commander._id !== commanderId)]);
+} catch (err) {
     console.error("Commander not deleted", err);
   }
 };
@@ -92,7 +90,7 @@ const deleteCommander = async (commanderId) => {
 					</tr>
 				</thead>
 				<tbody>
-					{commanders.map((commander) => (
+					{commanders && commanders.map((commander) => (
 						<CommanderItem
 							key={commander._id}
 							commander={commander}
