@@ -27,6 +27,7 @@ function CharterList() {
 	}, []);
 
 	const updateCharter = async (updatedCharter) => {
+		console.log(updatedCharter._id)
 		try {
 			const res = await axios.put(
 				`http://localhost:5000/api/charters/${updatedCharter._id}`,
@@ -79,7 +80,6 @@ const deleteCharter = async (charterId) => {
 					<tr>
 						<th>Post Number</th>
 						<th></th>
-						<th>Commanders</th>
 						<th>Date Issued</th>
 						<th></th>
 					</tr>
@@ -89,8 +89,8 @@ const deleteCharter = async (charterId) => {
 						<CharterItem
 							key={charter._id}
 							charter={charter}
-							onUpdateCommander={updateCharter}
-							onDeleteCommander={deleteCharter}
+							onUpdateCharter={updateCharter}
+							onDeleteCharter={deleteCharter}
 						/>
 					))}
 					<AddCharter

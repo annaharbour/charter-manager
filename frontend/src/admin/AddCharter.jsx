@@ -9,9 +9,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
-	const [isDeceased, setIsDeceased] = useState(false);
 	const [image, setImage] = useState("");
-	const [newCommander, setNewCommander] = useState({
+	const [newCharter, setNewCharter] = useState({
+		postNum: "",
 		dateIssued: "",
 		charterImage: "",
 	});
@@ -26,7 +26,7 @@ function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setNewCommander((prev) => ({ ...prev, [name]: value }));
+		setNewCharter((prev) => ({ ...prev, [name]: value }));
 	};
 
 	const handleFileChange = async (e) => {
@@ -53,11 +53,10 @@ function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 		}
 	};
 
-	const handleAddNewCommander = async () => {
+	const handleAddNewCharter = async () => {
 		try {
-			const newCharterWithImage = { ...newCommander, image, isDeceased };
+			const newCharterWithImage = { ...newCharter, image };
 			await addNewCharter(newCharterWithImage);
-			setIsDeceased(isDeceased);
 			setIsCreating(false);
 		} catch (err) {
 			console.error("Commander not created", err);
@@ -71,8 +70,8 @@ function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 					<td data-th="Charter:">
 						<input
 							type="text"
-							name="charterId"
-							value={newCommander.charterId}
+							name="postNum"
+							value={newCharter.postNum}
 							onChange={handleChange}></input>
 					</td>
 					<td>
@@ -94,6 +93,7 @@ function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 							</span>
 						</div>
 					</td>
+					
 					<td data-th="Date Issued:">
 						<input
 							type="date"
@@ -111,7 +111,7 @@ function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 						<span>
 							<FontAwesomeIcon
 								icon={faCheck}
-								onClick={handleAddNewCommander}
+								onClick={handleAddNewCharter}
 								style={{ color: "black" }}
 							/>
 						</span>

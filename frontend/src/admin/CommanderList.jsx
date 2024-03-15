@@ -8,7 +8,6 @@ function CommanderList() {
 	const [commanders, setCommanders] = useState([]);
 	const [newCommander, setNewCommander] = useState({
 		name: "",
-		postNum: "",
 		dateStart: "",
 		dateEnd: "",
 		image: "",
@@ -56,7 +55,6 @@ function CommanderList() {
 			setCommanders(prev => [...prev, addedCommander]);
 			setNewCommander({
 				name: "",
-				postNum: "",
 				dateStart: "",
 				dateEnd: "",
 				image: "",
@@ -83,7 +81,6 @@ const deleteCommander = async (commanderId) => {
 					<tr>
 						<th>Commander Name</th>
 						<th></th>
-						<th>Post #</th>
 						<th>Charters List</th>
 						<th>Service Start</th>
 						<th>Service End</th>

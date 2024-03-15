@@ -18,11 +18,6 @@ const CommanderSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		postNum: {
-			type: Number,
-			required: true,
-		},
-
 		isDeceased: {
 			type: Boolean,
 			required: true,

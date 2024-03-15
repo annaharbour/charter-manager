@@ -25,7 +25,6 @@ app.use("/api/charters", charterRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 
-// app.use("/uploads", express.static(path.join(___dirname, "/uploads")));
 app.use('/uploads', express.static(path.join(__dirname, '../frontend/public/uploads')));
 
 

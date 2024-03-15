@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { formatDate, formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,44 +11,21 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
-	const [charters, setCharters] = useState([]);
-	const [selectedCharter, setSelectedCharter] = useState("");
 	const [image, setImage] = useState("");
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedCharter, setUpdatedCharter] = useState({ ...charter });
 
-    // Fetch Commanders Below
-	// useEffect(() => {
-	// 	const fetchCharters = async () => {
-	// 		try {
-	// 			const res = await axios.get("http://localhost:5000/api/charters");
-    //             console.log(res)
-	// 			setCharters(res.data.charters);
-	// 		} catch (error) {
-	// 			console.error("Error fetching charters: ", error);
-	// 		}
-	// 	};
-
-	// 	fetchCharters();
-	// }, []);
 
 	const handleEditClick = () => {
 		setIsEditing(true);
 	};
 
 	const handleCancelClick = (e) => {
-		setSelectedCharter("");
-        // Reset selected commanders for charter to what is in the database 
-
-		// setUpdatedCharter((prev) => ({
-		// 	...prev,
-		// 	charters: prev.charters.filter(
-		// 		(charter) => charter._id !== selectedCharter
-		// 	),
-		// 	name: charter.name,
-		// 	dateIssued: charter.dateIssued,
-		// 	image: charter.charterimage
-		// }));
+		setUpdatedCharter((prev) => ({
+			...prev,
+			dateIssued: charter.dateIssued,
+			image: charter.charterImage
+		}));
 		setIsEditing(false);
 	};
 
@@ -60,16 +37,20 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 	const handleFileChange = async (e) => {
 		e.preventDefault();
 		const file = e.target.files[0];
-		if (!file) return; 
-	
+		if (!file) return;
+
 		try {
 			const formData = new FormData();
-			formData.append('image', file);
-			const uploadResponse = await axios.post('http://localhost:5000/api/upload', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
+			formData.append("image", file);
+			const uploadResponse = await axios.post(
+				"http://localhost:5000/api/upload",
+				formData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
 				}
-			});
+			);
 			const uploadedImageUrl = uploadResponse.data.image;
 			setImage(uploadedImageUrl);
 		} catch (err) {
@@ -78,31 +59,33 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 	};
 
 	const updateCharter = async () => {
+		console.log('This is the id:', updatedCharter._id)
 		try {
 			const updatedCharterWithImage = { ...updatedCharter, image };
-			await onUpdateCharter(updatedCharterWithImage);			
+			await onUpdateCharter(updatedCharterWithImage);
 			setIsEditing(false);
 		} catch (err) {
 			console.error("Charter not updated", err);
 		}
 	};
-	
+
 	const handleDeleteClick = (e) => {
-		e.preventDefault()
+		e.preventDefault();
+		console.log(charter._id)
 		onDeleteCharter(charter._id);
-		setIsEditing(false)
-	  };
+		setIsEditing(false);
+	};
 
 	return (
 		<tr>
 			{isEditing ? (
 				<>
 					<td data-th="PostNum:">
-						   <input
+						<input
 							type="number"
 							name="postNum"
-							value={updatedCharter.postNum}
-							onChange={handleChange}></input> 
+							value={updatedCharter.postNum || ""}
+							onChange={handleChange}></input>
 					</td>
 					<td>
 						<div className="icons">
@@ -123,16 +106,11 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 							</span>
 						</div>
 					</td>
-                    <td data-th="Commanders:">
-                    {/* Map through commanders options, select, plus/minus for add or delete */}
-                    <select>
-                        <option>Commander 1</option>
-                        <option>Commander 2</option>
-                    </select>
-					</td>
+
 					<td data-th="Date Issued:">
 						<input
 							type="date"
+							value={updatedCharter.dateIssued}
 							name="dateIssued"
 							id="date-start"
 							onChange={handleChange}></input>
@@ -140,18 +118,10 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 				</>
 			) : (
 				<>
-					<td data-th="PostNum:">
-                        {/* Charter post number */}
-                    </td>
-					<td data-th="Commanders:">
-                        {/* Commanders assigned to charter */}
-                    </td>
+					<td data-th="PostNum:">{updatedCharter.postNum}</td>
+					
 					<td></td>
-					<td data-th="Date Issued:">
-                     {`${formatYear(
-					charter.dateIssued
-					)}`} 
-                    </td>
+					<td data-th="Date Issued:">{formatDate(charter.dateIssued)}</td>
 				</>
 			)}
 
