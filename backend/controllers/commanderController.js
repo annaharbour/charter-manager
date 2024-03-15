@@ -21,7 +21,7 @@ const getAllCommanders = asyncHandler(async (req, res) => {
 
 const addNewCommander = asyncHandler(async (req, res) => {
 	try {
-		const { name, image, dateStart, dateEnd, isDeceased, postNum, charters } =
+		const { name, image, dateStart, dateEnd, isDeceased, charters } =
 			req.body;
 
 		const commander = new Commander({
@@ -30,7 +30,6 @@ const addNewCommander = asyncHandler(async (req, res) => {
 			dateStart: dateStart || Date.now(),
 			dateEnd: dateEnd || Date.now(),
 			isDeceased: isDeceased || false,
-			postNum: postNum || 123,
 			charters: charters,
 		});
 
@@ -87,14 +86,13 @@ const getCommanderById = asyncHandler(async (req, res) => {
 
 const updateCommanderById = asyncHandler(async (req, res) => {
 	try {
-		const { name, image, dateStart, dateEnd, isDeceased, postNum, charters } =
+		const { name, image, dateStart, dateEnd, isDeceased, charters } =
 			req.body;
 		if (
 			!name ||
 			!dateStart ||
 			!dateEnd ||
-			typeof isDeceased === "undefined" ||
-			!postNum
+			typeof isDeceased === "undefined" 
 		) {
 			return res
 				.status(400)
@@ -108,7 +106,6 @@ const updateCommanderById = asyncHandler(async (req, res) => {
 			commander.dateStart = dateStart;
 			commander.dateEnd = dateEnd;
 			commander.isDeceased = isDeceased;
-			commander.postNum = postNum;
 			commander.charters = charters;
 			const updatedCommander = await commander.save();
 			await updatedCommander.populate("charters");

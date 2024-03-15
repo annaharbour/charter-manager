@@ -18,7 +18,6 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 	const [image, setImage] = useState("");
 	const [newCommander, setNewCommander] = useState({
 		name: "",
-		postNum: "",
 		dateStart: "",
 		dateEnd: "",
 		image: "",
@@ -65,7 +64,6 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 	};
 
 	const handleRemoveCharter = (charterId) => {
-		console.log(charterId);
 		setNewCommander((prev) => ({
 			...prev,
 			charters: prev.charters.filter((charter) => charter._id !== charterId),
@@ -149,17 +147,10 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 							</span>
 						</div>
 					</td>
-					<td data-th="Post Number:">
-						<input
-							type="text"
-							name="postNum"
-							value={newCommander.postNum}
-							onChange={handleChange}></input>
-					</td>
 					<td className="charters-edit" data-th="Charters:">
 						{newCommander.charters && newCommander.charters.map((charter) => (
 							<li key={charter._id}>
-								{formatYear(charter.dateIssued)}
+								{charter.postNum}
 								<FontAwesomeIcon
 									className="icon faMinus"
 									onClick={() => handleRemoveCharter(charter._id)}
@@ -179,7 +170,7 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 								{charters
 									.map((charter) => (
 										<option key={charter._id} value={charter._id}>
-											{formatYear(charter.dateIssued)}
+											{charter.postNum}
 										</option>
 									))}
 							</select>

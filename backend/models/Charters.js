@@ -3,13 +3,16 @@ const Schema = mongoose.Schema;
 
 const CharterSchema = new Schema(
 	{
+		postNum: {
+			type: Number,
+			required: true,
+		},
 		dateIssued: {
-			type: Date,
+			type: String,
 			required: true,
 		},
 		charterImage: {
 			type: String,
-			required: true,
 		},
 	},
 	{ timestamps: true }

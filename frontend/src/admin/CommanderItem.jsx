@@ -46,7 +46,6 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 				(charter) => charter._id !== selectedCharter
 			),
 			name: commander.name,
-			postNum: commander.postNum,
 			dateStart: commander.dateStart,
 			dateEnd: commander.dateEnd,
 			image: commander.image
@@ -100,10 +99,6 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 		}
 	};
 	
-	
-	
-	
-
 	const onStarClick = () => {
 		setIsDeceased(!isDeceased)
 	}
@@ -164,13 +159,7 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 							</span>
 						</div>
 					</td>
-					<td data-th="Post Number:">
-						<input
-							type="text"
-							name="postNum"
-							value={updatedCommander.postNum}
-							onChange={handleChange}></input>
-					</td>
+					
 					<td className="charters-edit" data-th="Charters:">
 						{updatedCommander.charters.map((charter) => (
 							<li key={charter._id}>
@@ -200,7 +189,7 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 									)
 									.map((charter) => (
 										<option key={charter._id} value={charter._id}>
-											{formatYear(charter.dateIssued)}
+											{charter.postNum}
 										</option>
 									))}
 							</select>
@@ -238,10 +227,9 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 					) : (
 						<td></td>
 					)}
-					<td data-th="Post Number:">{commander.postNum}</td>
 					<td data-th="Charters:">
 						{commander.charters.map((charter) => (
-							<li key={charter._id}>{formatYear(charter.dateIssued)}</li>
+							<li key={charter._id}>{charter.postNum}</li>
 						))}
 					</td>
 					<td data-th="Service Start:">{`${formatDate(
