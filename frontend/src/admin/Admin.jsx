@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import CommanderList from "./CommanderList";
 import CharterList from "./CharterList";
-
+import { logOutUser } from "../services/authService";
 function Admin() {
 	const [error, setError] = useState("");
 	const [toggleCommanders, setToggleCommanders] = useState(false);
@@ -16,12 +16,7 @@ function Admin() {
 
 	const handleLogout = async () => {
 		try {
-			await fetch("http://localhost:5000/auth/signout", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
+			await logOutUser();
 			localStorage.removeItem("token");
 			window.location.reload();
 		} catch (error) {
@@ -71,7 +66,7 @@ function Admin() {
 					</div>
 					{toggleCharters ? (
 						<div className="commanders-charters">
-							<CharterList/>
+							<CharterList />
 						</div>
 					) : (
 						""

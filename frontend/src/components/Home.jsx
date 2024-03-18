@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Charter from "./Charter";
 import Commander from "./Commander";
+import { getCharters } from "../services/chartersService";
+import { getCommandersByCharter } from "../services/commandersService";
 
 function CommanderList() {
 	const [charters, setCharters] = useState([]);
@@ -9,9 +11,8 @@ function CommanderList() {
 	useEffect(() => {
 		const fetchCharters = async () => {
 			try {
-				const response = await fetch("http://localhost:5000/api/charters");
-				const data = await response.json();
-				setCharters(data.charters);
+				const response = await getCharters();
+				setCharters(response.data.charters);
 			} catch (error) {
 				console.error("Error fetching charters: ", error);
 			}
@@ -23,22 +24,18 @@ function CommanderList() {
 	useEffect(() => {
 		const fetchCommandersForCharter = async (charterId) => {
 			try {
-				const response = await fetch(`http://localhost:5000/api/commanders/charter/${charterId}`);
-				if (!response.ok) {
-					throw new Error(`Error fetching commanders for charter ${charterId}: ${response.statusText}`);
-				}
-				const data = await response.json();
-				const { commanders } = data;
+				const response = await getCommandersByCharter(charterId);
+				const { commanders } = response.data;
 				setCommandersByCharterId((prevState) => ({
 					...prevState,
 					[charterId]: commanders,
 				}));
+
+				console.log(commandersByCharterId);
 			} catch (error) {
 				console.error(error);
-				// You can handle the error here, such as displaying a message to the user
 			}
 		};
-		
 
 		charters.forEach((charter) => {
 			fetchCommandersForCharter(charter._id);
@@ -47,13 +44,14 @@ function CommanderList() {
 
 	return (
 		<div className="commander-list">
-			
 			<h1>Commanders by Charter</h1>
-			{charters.map((charter) => (
-				<div key={charter._id}>
-					<Charter
-						dateIssued={charter.dateIssued}
-						charterImage={charter.charterImage}/>
+			{charters &&
+				charters.map((charter) => (
+					<div key={charter._id}>
+						<Charter
+							dateIssued={charter.dateIssued}
+							charterImage={charter.charterImage}
+						/>
 						<div className="commanders">
 							{commandersByCharterId[charter._id]?.map((commander) => (
 								<Commander
@@ -67,14 +65,10 @@ function CommanderList() {
 								/>
 							))}
 						</div>
-					
-				</div>
-			))}
+					</div>
+				))}
 		</div>
 	);
 }
 
 export default CommanderList;
-
-// Grid of two columns
-// Admin function: edit or delete entries

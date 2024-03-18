@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import CommanderItem from "./CommanderItem";
 import AddCommander from "./AddCommander";
+import {
+	alterCommander,
+	getCommanders,
+	createCommander,
+	delCommander,
+} from "../services/commandersService";
 
 function CommanderList() {
 	const [isCreating, setIsCreating] = useState(false);
@@ -17,9 +22,8 @@ function CommanderList() {
 	useEffect(() => {
 		const fetchCommanders = async () => {
 			try {
-				const response = await fetch("http://localhost:5000/api/commanders");
-				const data = await response.json();
-				setCommanders(data.commanders);
+				const response = await getCommanders();
+				setCommanders(response.data.commanders);
 			} catch (error) {
 				console.error("Error fetching charters: ", error);
 			}
@@ -30,29 +34,24 @@ function CommanderList() {
 
 	const updateCommander = async (updatedCommander) => {
 		try {
-			const res = await axios.put(
-				`http://localhost:5000/api/commanders/${updatedCommander._id}`,
-				updatedCommander
-			);
+			const res = await alterCommander(updatedCommander);
 			const updatedData = res.data;
 			console.log(updatedData);
-			setCommanders(prev => [...prev.map((commander) => 
-				commander._id === updatedData._id ? updatedData : commander
-			)]);			
+			setCommanders((prev) => [
+				...prev.map((commander) =>
+					commander._id === updatedData._id ? updatedData : commander
+				),
+			]);
 		} catch (err) {
 			console.error("Commander not updated", err);
 		}
 	};
 
-
 	const addNewCommander = async (newCommander) => {
 		try {
-			const res = await axios.post(
-				"http://localhost:5000/api/commanders",
-				newCommander
-			);
+			const res = await createCommander(newCommander);
 			const addedCommander = res.data;
-			setCommanders(prev => [...prev, addedCommander]);
+			setCommanders((prev) => [...prev, addedCommander]);
 			setNewCommander({
 				name: "",
 				dateStart: "",
@@ -65,14 +64,16 @@ function CommanderList() {
 		}
 	};
 
-const deleteCommander = async (commanderId) => {
-  try {
-    await axios.delete(`http://localhost:5000/api/commanders/${commanderId}`);
-	setCommanders(prev => [...prev.filter((commander) => commander._id !== commanderId)]);
-} catch (err) {
-    console.error("Commander not deleted", err);
-  }
-};
+	const deleteCommander = async (commanderId) => {
+		try {
+			await delCommander();
+			setCommanders((prev) => [
+				...prev.filter((commander) => commander._id !== commanderId),
+			]);
+		} catch (err) {
+			console.error("Commander not deleted", err);
+		}
+	};
 
 	return (
 		<div>
@@ -87,14 +88,15 @@ const deleteCommander = async (commanderId) => {
 					</tr>
 				</thead>
 				<tbody>
-					{commanders && commanders.map((commander) => (
-						<CommanderItem
-							key={commander._id}
-							commander={commander}
-							onUpdateCommander={updateCommander}
-							onDeleteCommander={deleteCommander}
-						/>
-					))}
+					{commanders &&
+						commanders.map((commander) => (
+							<CommanderItem
+								key={commander._id}
+								commander={commander}
+								onUpdateCommander={updateCommander}
+								onDeleteCommander={deleteCommander}
+							/>
+						))}
 					<AddCommander
 						newCommander={newCommander}
 						addNewCommander={addNewCommander}

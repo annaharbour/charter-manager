@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { formatDate, formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,6 +11,8 @@ import {
 	faCamera,
 	faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import { addImage } from "../services/commonService";
+import { getCharters } from "../services/chartersService";
 
 function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 	const [isDeceased, setIsDeceased] = useState(commander.isDeceased);
@@ -24,7 +25,7 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 	useEffect(() => {
 		const fetchCharters = async () => {
 			try {
-				const res = await axios.get("http://localhost:5000/api/charters");
+				const res = await getCharters();
 				setCharters(res.data.charters);
 			} catch (error) {
 				console.error("Error fetching charters: ", error);
@@ -48,12 +49,13 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 			name: commander.name,
 			dateStart: commander.dateStart,
 			dateEnd: commander.dateEnd,
-			image: commander.image
+			image: commander.image,
 		}));
 		setIsEditing(false);
 	};
 
 	const handleChange = (e) => {
+		e.preventDefault()
 		const { name, value } = e.target;
 		setUpdatedCommander((prev) => ({ ...prev, [name]: value }));
 	};
@@ -82,43 +84,45 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 	const handleFileChange = async (e) => {
 		e.preventDefault();
 		const file = e.target.files[0];
-		if (!file) return; 
-	
+		if (!file) return;
+
 		try {
 			const formData = new FormData();
-			formData.append('image', file);
-			const uploadResponse = await axios.post('http://localhost:5000/api/upload', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
-			});
+			formData.append("image", file);
+			console.log(formData);
+			const uploadResponse = await addImage(formData);
+			console.log(uploadResponse);
 			const uploadedImageUrl = uploadResponse.data.image;
 			setImage(uploadedImageUrl);
 		} catch (err) {
 			console.error(err?.response?.data?.message || err.message);
 		}
 	};
-	
+
 	const onStarClick = () => {
-		setIsDeceased(!isDeceased)
-	}
+		setIsDeceased(!isDeceased);
+	};
 
 	const updateCommander = async () => {
 		try {
-			const updatedCommanderWithImage = { ...updatedCommander, image, isDeceased };
-			await onUpdateCommander(updatedCommanderWithImage);			
-			setIsDeceased(isDeceased)
+			const updatedCommanderWithImage = {
+				...updatedCommander,
+				image,
+				isDeceased,
+			};
+			await onUpdateCommander(updatedCommanderWithImage);
+			setIsDeceased(isDeceased);
 			setIsEditing(false);
 		} catch (err) {
 			console.error("Commander not updated", err);
 		}
 	};
-	
+
 	const handleDeleteClick = (e) => {
-		e.preventDefault()
+		e.preventDefault();
 		onDeleteCommander(commander._id);
-		setIsEditing(false)
-	  };
+		setIsEditing(false);
+	};
 
 	return (
 		<tr>
@@ -139,7 +143,6 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 									style={{ color: isDeceased ? "#a79055" : "#ffffff" }}
 									value={updateCommander.isDeceased}
 									onClick={onStarClick}
-
 								/>
 							</span>
 							<span>
@@ -159,11 +162,11 @@ function CommanderItem({ commander, onUpdateCommander, onDeleteCommander }) {
 							</span>
 						</div>
 					</td>
-					
+
 					<td className="charters-edit" data-th="Charters:">
 						{updatedCommander.charters.map((charter) => (
 							<li key={charter._id}>
-								{formatYear(charter.dateIssued)}
+								{charter.postNum}
 								<FontAwesomeIcon
 									className="icon faMinus"
 									onClick={() => handleRemoveCharter(charter._id)}

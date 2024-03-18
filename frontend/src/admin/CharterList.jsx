@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import CharterItem from "./CharterItem";
 import AddCharter from "./AddCharter";
+import {
+	updateCharterReq,
+	getCharters,
+	addCharter,
+	delCharter,
+} from "../services/chartersService";
 
 function CharterList() {
 	const [isCreating, setIsCreating] = useState(false);
@@ -9,15 +14,14 @@ function CharterList() {
 	const [newCharter, setNewCharter] = useState({
 		name: "",
 		dateIssued: "",
-		charterImage: ""
+		charterImage: "",
 	});
 
 	useEffect(() => {
 		const fetchCharters = async () => {
 			try {
-				const response = await fetch("http://localhost:5000/api/charters");
-				const data = await response.json();
-				setCharters(data.charters);
+				const response = await getCharters();
+				setCharters(response.data.charters);
 			} catch (error) {
 				console.error("Error fetching charters: ", error);
 			}
@@ -27,14 +31,10 @@ function CharterList() {
 	}, []);
 
 	const updateCharter = async (updatedCharter) => {
-		console.log(updatedCharter._id)
+		console.log(updatedCharter._id);
 		try {
-			const res = await axios.put(
-				`http://localhost:5000/api/charters/${updatedCharter._id}`,
-				updatedCharter
-			);
+			const res = await updateCharterReq(updatedCharter);
 			const updatedData = res.data;
-			console.log(updatedData);
 			setCharters((prev) =>
 				prev.map((charter) =>
 					charter._id === updatedData._id ? updatedData : charter
@@ -45,33 +45,31 @@ function CharterList() {
 		}
 	};
 
-
 	const addNewCharter = async (newCharter) => {
 		try {
-			const res = await axios.post(
-				"http://localhost:5000/api/charters",
-				newCharter
-			);
+			const res = await addCharter(newCharter);
 			const addedCharter = res.data;
 			setCharters((prev) => [...prev, addedCharter]);
 			setNewCharter({
 				name: "",
 				dateIssued: "",
-				charterImage: ""
+				charterImage: "",
 			});
 		} catch (err) {
 			console.error("Error adding commander", err);
 		}
 	};
 
-const deleteCharter = async (charterId) => {
-  try {
-    await axios.delete(`http://localhost:5000/api/charters/${charterId}`);
-    setCharters((prev) => prev.filter((charter) => charter._id !== charterId));
-  } catch (err) {
-    console.error("Charter not deleted", err);
-  }
-};
+	const deleteCharter = async (charterId) => {
+		try {
+			await delCharter(charterId);
+			setCharters((prev) =>
+				prev.filter((charter) => charter._id !== charterId)
+			);
+		} catch (err) {
+			console.error("Charter not deleted", err);
+		}
+	};
 
 	return (
 		<div>
@@ -85,7 +83,7 @@ const deleteCharter = async (charterId) => {
 					</tr>
 				</thead>
 				<tbody>
-					{charters.map((charter) => (
+					{charters && charters.map((charter) => (
 						<CharterItem
 							key={charter._id}
 							charter={charter}

@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBackward } from "@fortawesome/free-solid-svg-icons";
+import { signInUser } from "../services/authService";
 
 function SignIn() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,13 +14,7 @@ function SignIn() {
 	const handleSignIn = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axios.post(
-				"http://localhost:5000/api/auth/signin",
-				{
-					email: email,
-					password: password,
-				}
-			);
+			const response = await signInUser(email, password);
 			const data = response.data;
 			if (response.status === 200) {
 				setIsLoggedIn(true);

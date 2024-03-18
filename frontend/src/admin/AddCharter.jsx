@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faX,
@@ -7,6 +6,7 @@ import {
 	faPlus,
 	faCamera,
 } from "@fortawesome/free-solid-svg-icons";
+import { addImage } from "../services/commonService";
 
 function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 	const [image, setImage] = useState("");
@@ -37,15 +37,7 @@ function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 		try {
 			const formData = new FormData();
 			formData.append("image", file);
-			const uploadResponse = await axios.post(
-				"http://localhost:5000/api/upload",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				}
-			);
+			const uploadResponse = await addImage();
 			const uploadedImageUrl = uploadResponse.data.image;
 			setImage(uploadedImageUrl);
 		} catch (err) {
@@ -93,7 +85,7 @@ function AddCharter({ isCreating, setIsCreating, addNewCharter }) {
 							</span>
 						</div>
 					</td>
-					
+
 					<td data-th="Date Issued:">
 						<input
 							type="date"
