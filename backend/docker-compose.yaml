@@ -1,0 +1,15 @@
+services:
+  mongo: 
+    image: mongo
+    ports: 
+      - "27017:27017"
+    volumes:
+      - "C:/Users/Anna Harbour/documents/clients/VFW/mongo-persistence:/data/db"
+  backend:
+    image: test
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - PORT=5000
+      - JWTSecret=059840e1162e7577070456e9655d49a974b2a3e10c8bdd71d7a36d6101ae189d

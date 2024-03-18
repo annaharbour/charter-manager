@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { formatYear } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faStar,
@@ -10,6 +8,8 @@ import {
 	faPlus,
 	faCamera,
 } from "@fortawesome/free-solid-svg-icons";
+import { addImage } from "../services/commonService";
+import { getCharters } from "../services/chartersService";
 
 function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 	const [isDeceased, setIsDeceased] = useState(false);
@@ -26,7 +26,7 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 	useEffect(() => {
 		const fetchCharters = async () => {
 			try {
-				const res = await axios.get("http://localhost:5000/api/charters");
+				const res = await getCharters();
 				setCharters(res.data.charters);
 			} catch (error) {
 				console.error("Error fetching charters: ", error);
@@ -58,7 +58,9 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 
 			setNewCommander((prev) => ({
 				...prev,
-                charters: Array.isArray(prev.charters) ? [...prev.charters, selectedCharter] : [selectedCharter],
+				charters: Array.isArray(prev.charters)
+					? [...prev.charters, selectedCharter]
+					: [selectedCharter],
 			}));
 		}
 	};
@@ -78,15 +80,7 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 		try {
 			const formData = new FormData();
 			formData.append("image", file);
-			const uploadResponse = await axios.post(
-				"http://localhost:5000/api/upload",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				}
-			);
+			const uploadResponse = await addImage(formData);
 			const uploadedImageUrl = uploadResponse.data.image;
 			setImage(uploadedImageUrl);
 		} catch (err) {
@@ -148,17 +142,18 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 						</div>
 					</td>
 					<td className="charters-edit" data-th="Charters:">
-						{newCommander.charters && newCommander.charters.map((charter) => (
-							<li key={charter._id}>
-								{charter.postNum}
-								<FontAwesomeIcon
-									className="icon faMinus"
-									onClick={() => handleRemoveCharter(charter._id)}
-									icon={faMinus}
-									style={{ color: "red" }}
-								/>
-							</li>
-						))}
+						{newCommander.charters &&
+							newCommander.charters.map((charter) => (
+								<li key={charter._id}>
+									{charter.postNum}
+									<FontAwesomeIcon
+										className="icon faMinus"
+										onClick={() => handleRemoveCharter(charter._id)}
+										icon={faMinus}
+										style={{ color: "red" }}
+									/>
+								</li>
+							))}
 
 						<div>
 							<select
@@ -167,19 +162,18 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 								value={selectedCharter}
 								onChange={(e) => setSelectedCharter(e.target.value)}>
 								<option value="">Charter</option>
-								{charters
-									.map((charter) => (
-										<option key={charter._id} value={charter._id}>
-											{charter.postNum}
-										</option>
-									))}
+								{charters.map((charter) => (
+									<option key={charter._id} value={charter._id}>
+										{charter.postNum}
+									</option>
+								))}
 							</select>
 							<FontAwesomeIcon
 								icon={faPlus}
 								className="faPlus"
 								style={{ color: "black" }}
 								onClick={() => handleAddCharter(selectedCharter)}
-							/> 
+							/>
 						</div>
 					</td>
 					<td data-th="Service Start:">
@@ -198,8 +192,8 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 					</td>
 				</>
 			) : (
-                <></>
-			)} 
+				<></>
+			)}
 			<td>
 				{isCreating ? (
 					<div className="icons">
@@ -219,9 +213,9 @@ function AddCommander({ isCreating, setIsCreating, addNewCommander }) {
 						</span>
 					</div>
 				) : (
-					<div className="icons" onClick={handleIsCreating} >
-                        Add Commander
-						<FontAwesomeIcon icon={faPlus} style={{marginLeft: '.5rem'}}/>
+					<div className="icons" onClick={handleIsCreating}>
+						Add Commander
+						<FontAwesomeIcon icon={faPlus} style={{ marginLeft: ".5rem" }} />
 					</div>
 				)}
 			</td>

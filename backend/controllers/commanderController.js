@@ -11,7 +11,7 @@ const getAllCommanders = asyncHandler(async (req, res) => {
 		if (commanders && commanders.length > 0) {
 			res.json({ commanders });
 		} else {
-			res.json({ message: "No commanders found" });
+			res.status(200).json({ message: "No commanders found" });
 		}
 	} catch (error) {
 		console.error(error);
@@ -54,9 +54,7 @@ const getCommandersForCharter = asyncHandler(async (req, res) => {
 
 		if (!commanders || commanders.length === 0) {
 			console.log("No commanders found for the charter");
-			return res
-				.status(404)
-				.json({ error: "No commanders found for the charter" });
+			return res.status(200).json({message: "No commanders found for the charter" });
 		}
 
 		res.json({ commanders });

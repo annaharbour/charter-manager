@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { formatDate, formatYear } from "../common/formatDate";
+import { addImage } from "../services/commonService";
+import { formatDate } from "../common/formatDate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faX,
@@ -15,7 +15,6 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedCharter, setUpdatedCharter] = useState({ ...charter });
 
-
 	const handleEditClick = () => {
 		setIsEditing(true);
 	};
@@ -24,7 +23,7 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 		setUpdatedCharter((prev) => ({
 			...prev,
 			dateIssued: charter.dateIssued,
-			image: charter.charterImage
+			image: charter.charterImage,
 		}));
 		setIsEditing(false);
 	};
@@ -42,15 +41,7 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 		try {
 			const formData = new FormData();
 			formData.append("image", file);
-			const uploadResponse = await axios.post(
-				"http://localhost:5000/api/upload",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				}
-			);
+			const uploadResponse = await addImage(formData);
 			const uploadedImageUrl = uploadResponse.data.image;
 			setImage(uploadedImageUrl);
 		} catch (err) {
@@ -59,7 +50,6 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 	};
 
 	const updateCharter = async () => {
-		console.log('This is the id:', updatedCharter._id)
 		try {
 			const updatedCharterWithImage = { ...updatedCharter, image };
 			await onUpdateCharter(updatedCharterWithImage);
@@ -71,7 +61,6 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 
 	const handleDeleteClick = (e) => {
 		e.preventDefault();
-		console.log(charter._id)
 		onDeleteCharter(charter._id);
 		setIsEditing(false);
 	};
@@ -119,7 +108,7 @@ function CharterItem({ charter, onUpdateCharter, onDeleteCharter }) {
 			) : (
 				<>
 					<td data-th="PostNum:">{updatedCharter.postNum}</td>
-					
+
 					<td></td>
 					<td data-th="Date Issued:">{formatDate(charter.dateIssued)}</td>
 				</>

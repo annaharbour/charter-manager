@@ -27,11 +27,11 @@ const getCharterById = asyncHandler(async (req, res) => {
 // Route GET @ /api/charters
 const getAllCharters = asyncHandler(async (req, res) => {
 	try {
-		const charters = await Charter.find().sort({dateIssued: -1});
+		const charters = await Charter.find().sort({ dateIssued: -1 });
 
 		if (!charters || charters.length === 0) {
 			console.log("No charters found");
-			return res.status(404).json({ error: "No charters found" });
+			return res.status(200).json({ charters });
 		}
 
 		res.json({ charters });
@@ -41,16 +41,10 @@ const getAllCharters = asyncHandler(async (req, res) => {
 	}
 });
 
-
 const updateCharterById = asyncHandler(async (req, res) => {
 	try {
-		const { charterImage, postNum, dateIssued } =
-			req.body;
-		if (
-			!charterImage ||
-			!postNum ||
-			!dateIssued
-		) {
+		const { charterImage, postNum, dateIssued } = req.body;
+		if (!charterImage || !postNum || !dateIssued) {
 			return res
 				.status(400)
 				.json({ error: "Missing required fields in the request body" });
@@ -61,7 +55,7 @@ const updateCharterById = asyncHandler(async (req, res) => {
 			charter.postNum = postNum;
 			charter.charterImage = charterImage;
 			charter.dateIssued = dateIssued;
-			
+
 			const updatedCharter = await charter.save();
 			res.json(updatedCharter);
 		} else {
@@ -78,19 +72,18 @@ const updateCharterById = asyncHandler(async (req, res) => {
 const deleteCharter = asyncHandler(async (req, res) => {
 	const charterId = req.params.charterId;
 	try {
-	  const charter = await Charter.findById(charterId);
-	  if (charter) {
-		await Charter.deleteOne({ _id: charterId });
-		res.status(200).json({ message: "Charter deleted" });
-	  } else {
-		res.status(404).json({ message: "Charter not found" });
-	  }
+		const charter = await Charter.findById(charterId);
+		if (charter) {
+			await Charter.deleteOne({ _id: charterId });
+			res.status(200).json({ message: "Charter deleted" });
+		} else {
+			res.status(404).json({ message: "Charter not found" });
+		}
 	} catch (error) {
-	  console.error("Error deleting charter:", error);
-	  res.status(500).json({ message: "Internal server error" });
+		console.error("Error deleting charter:", error);
+		res.status(500).json({ message: "Internal server error" });
 	}
-  });
-  
+});
 
 // New Charter
 // Route POST @ /api/charters
@@ -109,4 +102,10 @@ const addNewCharter = asyncHandler(async (req, res) => {
 	}
 });
 
-module.exports = { getCharterById, addNewCharter, getAllCharters, updateCharterById, deleteCharter };
+module.exports = {
+	getCharterById,
+	addNewCharter,
+	getAllCharters,
+	updateCharterById,
+	deleteCharter,
+};
